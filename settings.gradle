@@ -1,0 +1,2 @@
+include ':app', ':uilibaray', ':colorpickerview', ':litepal_core',':litepal_java'
+rootProject.name='MoneyNotes'

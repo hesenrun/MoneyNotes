@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/fl_color"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#ffff0000">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_white_gradually_trans" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_black_gradually_trans" />
+
+        <View
+            android:id="@+id/view_location"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/shape_stroke_dot" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <com.shixia.colorpickerview.ColorPreviewView
+            android:id="@+id/cpv_color_preview"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rl_color_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/ll_color_progress"
+                        android:layout_width="match_parent"
+                        android:layout_height="12dp">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_red_green_01" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_red_green_02" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_green_blue_01" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_green_blue_02" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_blue_red_01" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_blue_red_02" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view_color_bar"
+                    android:layout_width="6dp"
+                    android:layout_height="16dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/shape_color_pick_bar" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_trans_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_centerVertical="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/bg_trans_01" />
+
+                <ImageView
+                    android:id="@+id/view_trans_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_centerVertical="true" />
+
+                <View
+                    android:id="@+id/view_trans_bar"
+                    android:layout_width="6dp"
+                    android:layout_height="16dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/shape_color_pick_bar" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

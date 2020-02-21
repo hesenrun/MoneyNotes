@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaSbtSettings">
+    <option name="customVMPath" />
+    <option name="vmParameters" value="  -Dhttp.proxyHost=127.0.0.1   -Dhttp.proxyPort=8080   -Dhttps.proxyHost=127.0.0.1   -Dhttps.proxyPort=8080" />
+  </component>
+</project>

@@ -1,0 +1,211 @@
+package com.bqmz001.moneynotes;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import android.app.Dialog;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bqmz001.moneynotes.adapter.SpCfMenuAdapter;
+import com.bqmz001.moneynotes.data.DataCenter;
+import com.bqmz001.moneynotes.entity.Classification;
+import com.bqmz001.moneynotes.entity.Note;
+import com.bqmz001.moneynotes.private_ui.DateTimeDialog;
+import com.bqmz001.moneynotes.util.DateTimeUtil;
+import com.bqmz001.moneynotes.util.ToastUtil;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class EditNoteActivity extends BaseActivity {
+    Toolbar toolbar;
+    ActionBar actionBar;
+    Spinner spinner;
+    SpCfMenuAdapter adapter;
+    Button getNow, setTime;
+    TextView title_small;
+    EditText editText_time, editText_cost, editText_content, editText_summary;
+    List<Classification> classifications;
+    DateTimeDialog dialog;
+
+
+    Classification classification;
+    Note note;
+    long thisTime;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_note);
+        classifications = DataCenter.getClassificationList(DataCenter.getNowUser());
+        getNow = findViewById(R.id.button_now);
+        setTime = findViewById(R.id.button_choose_time);
+        title_small = findViewById(R.id.textView_title_small);
+        editText_time = findViewById(R.id.editText_time);
+        editText_cost = findViewById(R.id.editText_cost);
+        editText_content = findViewById(R.id.editText_content);
+        editText_summary = findViewById(R.id.editText_summary);
+        toolbar = findViewById(R.id.toolbar);
+        spinner = findViewById(R.id.spinner_classification);
+        dialog = new DateTimeDialog(EditNoteActivity.this);
+        adapter = new SpCfMenuAdapter(EditNoteActivity.this, classifications);
+        editText_time.setFocusable(false);
+
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                classification = classifications.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        if (getIntent().getIntExtra("note_id", -2) > -1) {
+            note = DataCenter.getNote(getIntent().getIntExtra("note_id", -2));
+            editText_time.setText(DateTimeUtil.timestampToDate(note.getTime()));
+            editText_cost.setText(note.getCost() + "");
+            editText_content.setText(note.getNote());
+            editText_summary.setText(note.getSummary());
+            for (int i = 0; i < classifications.size(); i++) {
+                if (note.getClassification().getId() == classifications.get(i).getId()) {
+                    spinner.setSelection(i,true);
+                    break;
+                }
+
+            }
+            thisTime = note.getTime();
+            toolbar.setTitle("编辑帐单");
+            title_small.setText("编辑帐单");
+        } else {
+            toolbar.setTitle("记一笔");
+            title_small.setText("记一笔");
+        }
+
+        dialog.setOnClickListener(new DateTimeDialog.OnClickListener() {
+            @Override
+            public void ok(long time, View view) {
+                thisTime = time;
+                editText_time.setText(DateTimeUtil.timestampToDate(thisTime));
+            }
+
+            @Override
+            public void cancel(View view) {
+
+            }
+        });
+        getNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                thisTime = DateTimeUtil.getNow();
+                editText_time.setText(DateTimeUtil.timestampToDate(thisTime));
+            }
+        });
+
+        setTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+            }
+        });
+
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
+        }
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.ok:
+                if (check())
+                    if (getIntent().getIntExtra("note_id", -2) > -1) {
+                        note.setNote(editText_content.getText().toString());
+                        note.setCost(Float.parseFloat(editText_cost.getText().toString()));
+                        note.setClassification(classification);
+                        note.setUser(DataCenter.getNowUser());
+                        note.setTime(thisTime);
+                        if (editText_summary.getText().toString().trim().length() == 0) {
+                            note.setSummary("暂无备注");
+                        } else {
+                            note.setSummary(editText_summary.getText().toString());
+                        }
+                        DataCenter.saveNote(note);
+                        finish();
+                    } else {
+                        note = new Note();
+                        note.setNote(editText_content.getText().toString());
+                        note.setCost(Float.parseFloat(editText_cost.getText().toString()));
+                        note.setClassification(classification);
+                        note.setUser(DataCenter.getNowUser());
+                        note.setTime(thisTime);
+                        if (editText_summary.getText().toString().trim().length() == 0) {
+                            note.setSummary("暂无备注");
+                        } else {
+                            note.setSummary(editText_summary.getText().toString());
+                        }
+                        DataCenter.saveNote(note);
+                        finish();
+
+                    }
+
+
+//                Toast.makeText(EditNoteActivity.this, "name:" + editText_content.getText() + "\n" +
+//                        "time:" + thisTime + "\n" +
+//                        "cost:" + editText_cost.getText() + "\n" +
+//                        "classification:" + classification.getName() + "\n" +
+//                        "summary:" + editText_summary.getText(), Toast.LENGTH_SHORT).show();
+//                finish();
+
+                break;
+
+        }
+        return true;
+    }
+
+    public boolean check() {
+        if (editText_time.getText().length() == 0) {
+            ToastUtil.show(ToastUtil.NO_TIME);
+            return false;
+        }
+        if (editText_cost.getText().toString().trim().length() == 0 || Float.parseFloat(editText_cost.getText().toString().trim()) < 0) {
+            ToastUtil.show(ToastUtil.NO_COST);
+            return false;
+        }
+        if (editText_content.getText().toString().trim().length() <= 0) {
+            ToastUtil.show(ToastUtil.NO_CONTENT);
+            return false;
+        }
+        return true;
+    }
+}

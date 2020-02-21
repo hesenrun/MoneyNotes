@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <DatePicker
+        android:id="@+id/datepicker_day"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:calendarViewShown="false"
+        android:theme="@android:style/Theme.Holo.Light" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout_week"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal">
+
+
+        <EditText
+            android:id="@+id/editText_year_forWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="年 第"
+            android:textColor="#000000"
+            android:textSize="19dp" />
+
+        <EditText
+            android:id="@+id/editText_week_forWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="30dp"
+            android:text="周"
+            android:textColor="#000000"
+            android:textSize="19dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_month"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal">
+
+
+        <EditText
+            android:id="@+id/editText_year_forMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="年"
+            android:textColor="#000000"
+            android:textSize="19dp" />
+
+        <EditText
+            android:id="@+id/editText_month_forMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="30dp"
+            android:text="月"
+            android:textColor="#000000"
+            android:textSize="19dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_custom"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="从" />
+
+        <DatePicker
+            android:id="@+id/datepicker_custom_start"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:calendarViewShown="false"
+            android:theme="@android:style/Theme.Holo.Light" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="到" />
+
+        <DatePicker
+            android:id="@+id/datepicker_custom_stop"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:calendarViewShown="false"
+            android:theme="@android:style/Theme.Holo.Light" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="取消" />
+
+        <Button
+            android:id="@+id/button_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="确定" />
+    </LinearLayout>
+</LinearLayout>

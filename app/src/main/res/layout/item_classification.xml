@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_classification"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/shadow"
+    android:orientation="horizontal">
+
+    <View
+        android:id="@+id/silde_color"
+        android:layout_width="3dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="#00BCD4"></View>
+
+    <TextView
+        android:id="@+id/item_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="生活饮食"
+        android:textColor="#000000"
+        android:textSize="19dp" />
+
+</LinearLayout>

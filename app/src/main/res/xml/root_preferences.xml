@@ -1,0 +1,58 @@
+<!--
+  ~ Copyright 2018 The app Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <PreferenceCategory app:title="常规">
+
+
+        <SwitchPreferenceCompat
+            app:key="ZuAnMode"
+            app:summaryOff="谨慎打开，特别恶臭"
+            app:summaryOn="祖安大舞台，有🐴你就来"
+            app:title="祖安模式" />
+
+        <SwitchPreferenceCompat
+            app:key="FingerPrint"
+            app:title="指纹解锁" />
+
+
+    </PreferenceCategory>
+    <PreferenceCategory app:title="关于">
+        <Preference app:title="版本：0.0.1" />
+        <Preference app:title="作者：bqmz001" />
+    </PreferenceCategory>
+    <PreferenceCategory app:title="使用到的开源库">
+        <Preference
+            app:summary="https://github.com/shixiuwen/colorpicker"
+            app:title="ColorPicker" />
+        <Preference
+            app:summary="https://github.com/LitePalFramework/LitePal"
+            app:title="LitePal" />
+        <Preference
+            app:summary="https://github.com/JodaOrg/joda-time"
+            app:title="joda-time" />
+        <Preference
+            app:summary="https://github.com/ReactiveX/RxJava&#x000A;https://github.com/ReactiveX/RxAndroid"
+            app:title="RxJava&amp;RxAndroid" />
+        <Preference
+            app:summary="https://github.com/lecho/hellocharts-android"
+            app:title="hellocharts-android" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
