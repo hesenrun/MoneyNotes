@@ -38,8 +38,8 @@ public class MainFragment extends ViewPagerFragment {
     CircleProgress circleProgress;
     SwipeRefreshLayout refreshLayout;
     FloatingActionButton fab_add;
-    TextView todayCost, monthSurp, dayUseAvg, daysRemaining;
-    List<Note> noteList = new ArrayList<>();
+    TextView todayCost, monthSurp, dayUseAvg, daysRemaining, nowTime;
+
 
     Disposable disposable, disposable2;
 
@@ -54,6 +54,7 @@ public class MainFragment extends ViewPagerFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        nowTime = view.findViewById(R.id.textView_nowTime);
         circleProgress = view.findViewById(R.id.circleProgress);
         refreshLayout = view.findViewById(R.id.swiperefresh);
         fab_add = view.findViewById(R.id.fab_add);
@@ -61,7 +62,6 @@ public class MainFragment extends ViewPagerFragment {
         monthSurp = view.findViewById(R.id.textVew_monthSurp);
         dayUseAvg = view.findViewById(R.id.textVew_dayUseAvg);
         daysRemaining = view.findViewById(R.id.textView_daysRemaining);
-        DataCenter.getNowUser();
         fab_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +100,7 @@ public class MainFragment extends ViewPagerFragment {
     }
 
     void refresh(final User user) {
+
         disposable = Observable.just(new ArrayList<Note>())
                 .subscribeOn(Schedulers.io())
                 .map(new Function<ArrayList<Note>, Float>() {
@@ -118,7 +119,7 @@ public class MainFragment extends ViewPagerFragment {
                 .subscribe(new Consumer<Float>() {
                     @Override
                     public void accept(Float aFloat) throws Exception {
-                        todayCost.setText(new BigDecimal(aFloat).setScale(2, RoundingMode.HALF_UP).toString() +"元");
+                        todayCost.setText(new BigDecimal(aFloat).setScale(2, RoundingMode.HALF_UP).toString() + "元");
                         disposable.dispose();
                     }
                 }, new Consumer<Throwable>() {
@@ -149,10 +150,11 @@ public class MainFragment extends ViewPagerFragment {
                         float f = aFloat;
                         int budget = DataCenter.getNowUser().getBudget();
                         int dr = DateTimeUtil.getLastDayOfMonth(DateTimeUtil.getNowYear(), DateTimeUtil.getNowMonth()) - DateTimeUtil.getNowDay();
-                        monthSurp.setText(new BigDecimal((budget - f)).setScale(2,RoundingMode.HALF_UP).toString()+"元");
-                        dayUseAvg.setText(new BigDecimal((budget - f) / dr ).setScale(2,RoundingMode.HALF_UP).toString()+"元");
-                        daysRemaining.setText(dr +"天");
+                        monthSurp.setText(new BigDecimal((budget - f)).setScale(2, RoundingMode.HALF_UP).toString() + "元");
+                        dayUseAvg.setText(new BigDecimal((budget - f) / dr).setScale(2, RoundingMode.HALF_UP).toString() + "元");
+                        daysRemaining.setText(dr + "天");
                         circleProgress.setProgress(f / budget);
+                        nowTime.setText("\uD83D\uDCC5当前时间：" + DateTimeUtil.timestampToDate(DateTimeUtil.getNow()));
                         disposable2.dispose();
                     }
                 }, new Consumer<Throwable>() {
@@ -161,6 +163,5 @@ public class MainFragment extends ViewPagerFragment {
                         throwable.printStackTrace();
                     }
                 });
-//        refreshLayout.setRefreshing(false);
     }
 }
