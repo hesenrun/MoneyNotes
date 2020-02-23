@@ -45,8 +45,7 @@ public class ToastUtil {
     public static final int AT_LEAST_ONE_CLASSIFICATION = 25;
     public static final int DO_NOT_DELETE_DEFAULT_OR_NOW = 26;
 
-    public static final int PLEASE_SELECT_START_AND_END = 27;
-    public static final int START_GREATER_THEN_STOP = 28;
+    public static final int TIME_WRITE_ERROR = 27;
 
     public static void init(Context context) {
         mContext = context;
@@ -145,10 +144,9 @@ public class ToastUtil {
                     Toast.makeText(mContext, "大义灭亲吗？", Toast.LENGTH_SHORT).show();
                     break;
                 case 27:
-                    Toast.makeText(mContext, "光搞一半就不搞了，你在勾引我吗？", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "我去年买了块表，可你连认都不认识", Toast.LENGTH_SHORT).show();
                     break;
                 case 28:
-                    Toast.makeText(mContext, "时光倒流X你\uD83D\uDC34", Toast.LENGTH_SHORT).show();
                     break;
                 case 29:
                     break;
@@ -238,10 +236,9 @@ public class ToastUtil {
                     Toast.makeText(mContext, "不允许删除当前用户或默认用户", Toast.LENGTH_SHORT).show();
                     break;
                 case 27:
-                    Toast.makeText(mContext, "开始和/或结束时间尚未选择，请将两个滚轮同时拨动方可选择时间", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "时间填写错误，请重新填写时间", Toast.LENGTH_SHORT).show();
                     break;
                 case 28:
-                    Toast.makeText(mContext, "开始时间大于结束时间，请重新选择", Toast.LENGTH_SHORT).show();
                     break;
                 case 29:
                     break;

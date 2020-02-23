@@ -1,31 +1,37 @@
-package com.bqmz001.moneynotes.fragment;
+package com.bqmz001.moneynotes;
 
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.widget.NestedScrollView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.bqmz001.moneynotes.CustomAnalysisActivity;
-import com.bqmz001.moneynotes.R;
-import com.bqmz001.moneynotes.assembly.ViewPagerFragment;
 import com.bqmz001.moneynotes.data.DataCenter;
 import com.bqmz001.moneynotes.entity.ClassificationFakeCount;
 import com.bqmz001.moneynotes.entity.DailyNoteFakeCount;
 import com.bqmz001.moneynotes.entity.Note;
 import com.bqmz001.moneynotes.entity.User;
 import com.bqmz001.moneynotes.util.DateTimeUtil;
+import com.bqmz001.moneynotes.util.ToastUtil;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -50,166 +56,148 @@ import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.PieChartView;
 
-public class AnalysisFragment extends ViewPagerFragment {
-
+public class CustomAnalysisActivity extends AppCompatActivity {
+    Toolbar toolbar;
+    ActionBar actionBar;
+    EditText startYear, startMonth, startDay, endYear, endMonth, endDay;
     PieChartView pieChartView;
     PieChartData pieChartData;
-    RadioGroup radioGroup;
-    RadioButton radioButton;
     ColumnChartView columnChartView;
     ColumnChartData columnChartData;
     TextView pieChartContent, dailycost;
     Disposable disposable, disposable2;
-    SwipeRefreshLayout swipeRefreshLayout;
     RelativeLayout relativeLayout;
     NestedScrollView scrollView;
     Button button;
     User user;
-
-
-    int type = 1;
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_analysis, container, false);
-        return rootView;
-    }
+    ProgressDialog progressDialog;
+    AlertDialog.Builder builder;
+    int iStartYear, iStartMonth, iStartDay, iEndYear, iEndMonth, iEndDay;
+    long iStartTime, iEndTime;
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_custom_analysis);
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("自定义查询");
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
+        }
+        builder = new AlertDialog.Builder(this)
+                .setTitle("为什么会这样？")
+                .setMessage("因为没有找到合适的滚轮控件，所以变成现在的这个样子。不好意思给大家添麻烦了！\n" +
+                        "尽管我自己看起来也是非常的不适，但在找到可替代方案之前，目前只能这样子了。\n" +
+                        "求大佬推荐好的控件！最好是加载不出错速度非常快的那种。")
+                .setNegativeButton("朕已阅", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("正在处理");
+        progressDialog.setMessage("请稍后...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        startYear = findViewById(R.id.editText_stratYear);
+        startMonth = findViewById(R.id.editText_startMonth);
+        startDay = findViewById(R.id.editText_startDay);
+        endYear = findViewById(R.id.editText_endYear);
+        endMonth = findViewById(R.id.editText_endMonth);
+        endDay = findViewById(R.id.editText_endDay);
+
+        pieChartView = findViewById(R.id.pieChartView);
+        pieChartContent = findViewById(R.id.textView_pieChartContent);
+        columnChartView = findViewById(R.id.columnChartView);
+        dailycost = findViewById(R.id.textView_dailyCost);
+        relativeLayout = findViewById(R.id.relativeLayout);
+        scrollView = findViewById(R.id.scrollView);
+        button = findViewById(R.id.button_ok);
+
         user = DataCenter.getNowUser();
-        button = view.findViewById(R.id.button);
-        pieChartView = view.findViewById(R.id.pieChartView);
-        pieChartContent = view.findViewById(R.id.textView_pieChartContent);
-        swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
-        columnChartView = view.findViewById(R.id.columnChartView);
-        radioGroup = view.findViewById(R.id.radioGroup_type);
-        dailycost = view.findViewById(R.id.textView_dailyCost);
-        relativeLayout = view.findViewById(R.id.relativeLayout);
-        radioButton = view.findViewById(R.id.radioButton_today);
-        scrollView = view.findViewById(R.id.scrollView);
-        View.OnTouchListener touchListener = new View.OnTouchListener() {
-            float ratio = 6.5f; //水平和竖直方向滑动的灵敏度,偏大是水平方向灵敏
-            float x0 = 0f;
-            float y0 = 0f;
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        x0 = event.getX();
-                        y0 = event.getY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        float dx = Math.abs(event.getX() - x0);
-                        float dy = Math.abs(event.getY() - y0);
-                        x0 = event.getX();
-                        y0 = event.getY();
-                        scrollView.requestDisallowInterceptTouchEvent(true);
-                        break;
-                }
-                return false;
-            }
-        };
+        scrollView.setVisibility(View.GONE);
+        relativeLayout.setVisibility(View.VISIBLE);
 
-        columnChartView.setOnTouchListener(touchListener);
-        pieChartView.setOnTouchListener(touchListener);
-
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                button.setTextColor(getResources().getColor(android.R.color.widget_edittext_dark));
-                switch (checkedId) {
-                    case R.id.radioButton_today:
-                        swipeRefreshLayout.setRefreshing(true);
-                        getToday();
-                        break;
-                    case R.id.radioButton_thisWeek:
-                        swipeRefreshLayout.setRefreshing(true);
-                        getThisWeek();
-                        break;
-                    case R.id.radioButton_thisMonth:
-                        swipeRefreshLayout.setRefreshing(true);
-                        getThisMonth();
-                        break;
-                }
-            }
-        });
-        radioButton.setChecked(true);
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
-                switch (type) {
-                    case 1:
-                        swipeRefreshLayout.setRefreshing(true);
-                        getToday();
-                        break;
-                    case 2:
-                        swipeRefreshLayout.setRefreshing(true);
-                        getThisWeek();
-                        break;
-                    case 3:
-                        swipeRefreshLayout.setRefreshing(true);
-                        getThisMonth();
-                        break;
-
-
-                }
-            }
-        });
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), CustomAnalysisActivity.class));
+                progressDialog.show();
+                if (check()) {
+                    init(iStartTime, iEndTime);
+                } else {
+                    ToastUtil.show(ToastUtil.TIME_WRITE_ERROR);
+                    progressDialog.dismiss();
+                }
             }
         });
+
 
     }
 
     @Override
-    protected void onFragmentVisibleChange(boolean isVisible) {
-        super.onFragmentVisibleChange(isVisible);
-        if (isVisible) {
-            user = DataCenter.getNowUser();
-            swipeRefreshLayout.setRefreshing(true);
-            switch (type) {
-                case 1:
-                    swipeRefreshLayout.setRefreshing(true);
-                    getToday();
-                    break;
-                case 2:
-                    swipeRefreshLayout.setRefreshing(true);
-                    getThisWeek();
-                    break;
-                case 3:
-                    swipeRefreshLayout.setRefreshing(true);
-                    getThisMonth();
-                    break;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.question:
+                builder.create().show();
+                break;
+        }
+        return true;
+    }
+
+    boolean check() {
+        //文本框非空检查
+        if (startYear.getText().toString().trim().length() > 0 ||
+                startMonth.getText().toString().trim().length() > 0 ||
+                startDay.getText().toString().trim().length() > 0 ||
+                endYear.getText().toString().trim().length() > 0 ||
+                endMonth.getText().toString().trim().length() > 0 ||
+                endDay.getText().toString().trim().length() > 0
+        ) {
+            iStartYear = Integer.parseInt(startYear.getText().toString().trim());
+            iStartMonth = Integer.parseInt(startMonth.getText().toString().trim());
+            iStartDay = Integer.parseInt(startDay.getText().toString().trim());
+            iEndYear = Integer.parseInt(endYear.getText().toString().trim());
+            iEndMonth = Integer.parseInt(endMonth.getText().toString().trim());
+            iEndDay = Integer.parseInt(endDay.getText().toString().trim());
+            //年份检查
+            if ((iStartYear > 1900 && iStartYear < 2100) && (iEndYear > 1900 && iEndYear < 2100)) {
+                //月份检查
+                if ((iStartMonth > 0 && iStartMonth < 13) && (iEndMonth > 0 && iEndMonth < 13)) {
+                    //日期检查第一步——看看有没有超过31天
+                    if ((iStartDay > 0 && iStartDay < 32) && (iEndDay > 0 && iEndDay < 32)) {
+                        //日期检查第二步——看看有没有超出当月最大
+                        if (iStartDay <= DateTimeUtil.getLastDayOfMonth(iStartYear, iStartMonth) && iEndDay <= DateTimeUtil.getLastDayOfMonth(iEndYear, iEndMonth)) {
+                            long s = DateTimeUtil.getFirstTimeOfDay(iStartYear, iStartMonth, iStartDay);
+                            long e = DateTimeUtil.getLastTimeOfDay(iEndYear, iEndMonth, iEndDay);
+                            //开始日期是否超过结束日期
+                            if (s < e) {
+                                iStartTime = s;
+                                iEndTime = e;
+                                return true;
+                            }
+                        }
+                    }
+                }
             }
         }
+        return false;
 
     }
 
-    void getToday() {
-        type = 1;
-        init(DateTimeUtil.getNowDayStartTimeStamp(), DateTimeUtil.getNowDayEndTimeStamp());
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_question, menu);
+        return true;
     }
-
-    void getThisWeek() {
-        type = 2;
-        init(DateTimeUtil.getFirstTimeOfThisWeek(), DateTimeUtil.getLastTimeOfThisWeek());
-    }
-
-    void getThisMonth() {
-        type = 3;
-        init(DateTimeUtil.getFirstTimeOfThisMonth(), DateTimeUtil.getLastTimeOfThisMonth());
-    }
-
-
 
     private void init(long startTime, long stopTime) {
         getPieChartData(startTime, stopTime, user);
@@ -357,7 +345,7 @@ public class AnalysisFragment extends ViewPagerFragment {
                             dailycost.setVisibility(View.GONE);
                             columnChartView.setVisibility(View.GONE);
                         }
-                        swipeRefreshLayout.setRefreshing(false);
+                        progressDialog.dismiss();
                         disposable2.dispose();
                     }
                 }, new Consumer<Throwable>() {

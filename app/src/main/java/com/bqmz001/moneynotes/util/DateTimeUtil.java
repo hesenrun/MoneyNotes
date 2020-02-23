@@ -46,7 +46,7 @@ public class DateTimeUtil {
 
     //获取今天的23：59：59.999的字符串
     public static synchronized long getNowDayEndTimeStamp() {
-        return new DateTime().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(59).getMillis();
+        return new DateTime().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).getMillis();
     }
 
     //获取当前时间
@@ -148,4 +148,28 @@ public class DateTimeUtil {
     }
 
     //获取某一天的开始/结束时间——我不信有一天能有比24小时多的少的，至少电脑上看来是这样
+    //事实证明我错了，拼字符串太累了！
+    public static synchronized long getFirstTimeOfDay(int year, int month, int day) {
+        return new DateTime()
+                .withYear(year)
+                .withMonthOfYear(month)
+                .withDayOfMonth(day)
+                .withHourOfDay(0)
+                .withMinuteOfHour(0)
+                .withSecondOfMinute(0)
+                .withMillisOfSecond(0)
+                .getMillis();
+    }
+
+    public static synchronized long getLastTimeOfDay(int year,int month,int day){
+        return new DateTime()
+                .withYear(year)
+                .withMonthOfYear(month)
+                .withDayOfMonth(day)
+                .withHourOfDay(23)
+                .withMinuteOfHour(59)
+                .withSecondOfMinute(59)
+                .withMillisOfSecond(999)
+                .getMillis();
+    }
 }
