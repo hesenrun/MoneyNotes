@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,15 +19,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bqmz001.moneynotes.R;
 import com.bqmz001.moneynotes.assembly.ViewPagerFragment;
 import com.bqmz001.moneynotes.data.DataCenter;
-import com.bqmz001.moneynotes.entity.Classification;
 import com.bqmz001.moneynotes.entity.ClassificationFakeCount;
 import com.bqmz001.moneynotes.entity.DailyNoteFakeCount;
 import com.bqmz001.moneynotes.entity.Note;
 import com.bqmz001.moneynotes.entity.User;
-import com.bqmz001.moneynotes.private_ui.TimeSelectDialog;
 import com.bqmz001.moneynotes.util.DateTimeUtil;
-
-import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -36,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
@@ -69,6 +63,7 @@ public class AnalysisFragment extends ViewPagerFragment {
     NestedScrollView scrollView;
     Button button;
     User user;
+
 
     int type = 1;
 
@@ -123,6 +118,7 @@ public class AnalysisFragment extends ViewPagerFragment {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                button.setTextColor(getResources().getColor(android.R.color.widget_edittext_dark));
                 switch (checkedId) {
                     case R.id.radioButton_today:
                         swipeRefreshLayout.setRefreshing(true);
@@ -158,7 +154,15 @@ public class AnalysisFragment extends ViewPagerFragment {
                         swipeRefreshLayout.setRefreshing(true);
                         getThisMonth();
                         break;
+
+
                 }
+            }
+        });
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -202,6 +206,7 @@ public class AnalysisFragment extends ViewPagerFragment {
         type = 3;
         init(DateTimeUtil.getFirstTimeOfThisMonth(), DateTimeUtil.getLastTimeOfThisMonth());
     }
+
 
 
     private void init(long startTime, long stopTime) {
