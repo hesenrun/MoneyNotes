@@ -89,9 +89,9 @@ public class CustomAnalysisActivity extends AppCompatActivity {
         }
         builder = new AlertDialog.Builder(this)
                 .setTitle("为什么会这样？")
-                .setMessage("因为没有找到合适的滚轮控件，所以变成现在的这个样子。不好意思给大家添麻烦了！\n" +
-                        "尽管我自己看起来也是非常的不适，但在找到可替代方案之前，目前只能这样子了。\n" +
-                        "求大佬推荐好的控件！最好是加载不出错速度非常快的那种。")
+                .setMessage("    因为没有找到合适的滚轮控件，所以变成现在的这个样子。不好意思给大家添麻烦了！\n" +
+                        "    尽管我自己看起来也是非常的不适，但在找到可替代方案之前，目前只能这样子了。\n" +
+                        "    求大佬推荐好的控件！最好是加载不出错速度非常快的那种。")
                 .setNegativeButton("朕已阅", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -154,11 +154,11 @@ public class CustomAnalysisActivity extends AppCompatActivity {
 
     boolean check() {
         //文本框非空检查
-        if (startYear.getText().toString().trim().length() > 0 ||
-                startMonth.getText().toString().trim().length() > 0 ||
-                startDay.getText().toString().trim().length() > 0 ||
-                endYear.getText().toString().trim().length() > 0 ||
-                endMonth.getText().toString().trim().length() > 0 ||
+        if (startYear.getText().toString().trim().length() > 0 &&
+                startMonth.getText().toString().trim().length() > 0 &&
+                startDay.getText().toString().trim().length() > 0 &&
+                endYear.getText().toString().trim().length() > 0 &&
+                endMonth.getText().toString().trim().length() > 0 &&
                 endDay.getText().toString().trim().length() > 0
         ) {
             iStartYear = Integer.parseInt(startYear.getText().toString().trim());
