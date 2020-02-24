@@ -14,8 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".CustomAnalysisActivity"
+            android:name=".CustomSearchActivity"
+            android:label="@string/title_activity_custom_search"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".CustomAnalysisActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".BaseActivity" />
         <activity
             android:name=".SplashActivity"

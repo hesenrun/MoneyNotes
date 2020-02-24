@@ -21,4 +21,5 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_custom_analysis">CustomAnalysisActivity</string>
+    <string name="title_activity_custom_search">CustomSearchActivity</string>
 </resources>

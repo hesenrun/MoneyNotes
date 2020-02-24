@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bqmz001.moneynotes.CustomSearchActivity;
 import com.bqmz001.moneynotes.EditNoteActivity;
 import com.bqmz001.moneynotes.EditUserActivity;
 import com.bqmz001.moneynotes.ManageActivity;
@@ -56,7 +58,7 @@ public class SearchFragment extends ViewPagerFragment {
     RadioButton radioButton;
     TextView textView;
     RelativeLayout relativeLayout;
-
+    Button button;
     int type = 1;
 
     @Nullable
@@ -75,6 +77,7 @@ public class SearchFragment extends ViewPagerFragment {
         radioButton = view.findViewById(R.id.radioButton_today);
         textView = view.findViewById(R.id.textView_total);
         relativeLayout = view.findViewById(R.id.relativeLayout);
+        button = view.findViewById(R.id.button);
         noteList = new ArrayList<>();
         adapter = new FlowAdapter(noteList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -84,6 +87,12 @@ public class SearchFragment extends ViewPagerFragment {
                 intent = new Intent(getContext(), NoteDetailActivity.class);
                 intent.putExtra("note_id", position);
                 startActivity(intent);
+            }
+        });
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), CustomSearchActivity.class));
             }
         });
         adapter.setLongClickListener(new FlowAdapter.OnLongClickListener() {

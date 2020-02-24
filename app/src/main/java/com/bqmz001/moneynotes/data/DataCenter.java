@@ -266,6 +266,10 @@ public class DataCenter {
         return LitePal.where("user_id=? and time between ? and ?", "" + user.getId(), startTime + "", endTime + "").order("time desc").find(Note.class, true);
     }
 
+    public static List<Note> getNoteList(User user, long startTime, long endTime, Classification classification) {
+        return LitePal.where("user_id=? and classification_id=? and time between ? and ?", "" + user.getId(), classification.getId() + "", startTime + "", endTime + "").order("time desc").find(Note.class, true);
+    }
+
     //获取笔记
     public static Note getNote(int note_id) {
         return LitePal.find(Note.class, note_id, true);
