@@ -31,9 +31,10 @@ public class DataCenter {
 
     //获取数据库里的默认帐户
     public static User getDefaultUser() {
-        if (defaultUser == null)
+        if (defaultUser == null) {
             defaultUser = LitePal.where("isDefault=?", "1").find(User.class).get(0);
-        nowUser = defaultUser;
+            nowUser = defaultUser;
+        }
         return defaultUser;
 
     }

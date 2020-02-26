@@ -3,6 +3,7 @@ package com.bqmz001.moneynotes.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
@@ -19,7 +20,7 @@ public class QuickAddWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
+
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_quick_add);
         Intent fullIntent = new Intent(context, EditNoteActivity.class);
@@ -47,6 +48,21 @@ public class QuickAddWidget extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        // Construct the RemoteViews object
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_quick_add);
+        Intent fullIntent = new Intent(context, EditNoteActivity.class);
+        fullIntent.putExtra("note_id", -1);
+        fullIntent.putExtra("from", "widget");
+        PendingIntent Pfullintent = PendingIntent.getActivity(context, 0, fullIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        views.setOnClickPendingIntent(R.id.quick_add, Pfullintent);
+        // Instruct the widget manager to update the widget
+        appWidgetManager.updateAppWidget(new ComponentName(context, QuickAddWidget.class), views);
     }
 }
 

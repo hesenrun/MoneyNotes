@@ -6,14 +6,6 @@
     <string name="title_activity_main" />
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
@@ -22,6 +14,5 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_custom_analysis">CustomAnalysisActivity</string>
     <string name="title_activity_custom_search">CustomSearchActivity</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
+
 </resources>
