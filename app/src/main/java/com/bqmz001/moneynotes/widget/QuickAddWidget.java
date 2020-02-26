@@ -23,7 +23,8 @@ public class QuickAddWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_quick_add);
         Intent fullIntent = new Intent(context, EditNoteActivity.class);
-        fullIntent.putExtra("note_id",-1);
+        fullIntent.putExtra("note_id", -1);
+        fullIntent.putExtra("from", "widget");
         PendingIntent Pfullintent = PendingIntent.getActivity(context, 0, fullIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         views.setOnClickPendingIntent(R.id.quick_add, Pfullintent);
         // Instruct the widget manager to update the widget

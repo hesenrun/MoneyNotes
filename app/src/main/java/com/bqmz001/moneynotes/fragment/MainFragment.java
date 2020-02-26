@@ -67,6 +67,7 @@ public class MainFragment extends ViewPagerFragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), EditNoteActivity.class);
                 intent.putExtra("note_id", -1);
+                intent.putExtra("from","app");
                 startActivity(intent);
             }
         });

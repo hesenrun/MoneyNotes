@@ -56,9 +56,9 @@ public class DataCenter {
 
     //将一个帐户设置为数据库中的默认帐户
     public static void setDefaultUser(User defaultUser) {
-        User u = new User();
-        u.setDefault(false);
-        u.updateAll();
+        ContentValues values = new ContentValues();
+        values.put("isdefault", "0");
+        LitePal.updateAll(User.class, values, "isdefault = ?", "1");
         defaultUser.setDefault(true);
         defaultUser.save();
     }

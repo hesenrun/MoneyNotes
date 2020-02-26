@@ -22,6 +22,7 @@ import com.bqmz001.moneynotes.adapter.SpCfMenuAdapter;
 import com.bqmz001.moneynotes.data.DataCenter;
 import com.bqmz001.moneynotes.entity.Classification;
 import com.bqmz001.moneynotes.entity.Note;
+import com.bqmz001.moneynotes.entity.User;
 import com.bqmz001.moneynotes.private_ui.DateTimeDialog;
 import com.bqmz001.moneynotes.util.DateTimeUtil;
 import com.bqmz001.moneynotes.util.ToastUtil;
@@ -40,6 +41,7 @@ public class EditNoteActivity extends BaseActivity {
     EditText editText_time, editText_cost, editText_content, editText_summary;
     List<Classification> classifications;
     DateTimeDialog dialog;
+    User user;
 
 
     Classification classification;
@@ -50,7 +52,14 @@ public class EditNoteActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
-        classifications = DataCenter.getClassificationList(DataCenter.getNowUser());
+        if (getIntent().getStringExtra("from").equals("widget")) {
+            user = DataCenter.getDefaultUser();
+        } else if (getIntent().getStringExtra("from").equals("app")) {
+            user = DataCenter.getNowUser();
+
+        }
+
+        classifications = DataCenter.getClassificationList(user);
         getNow = findViewById(R.id.button_now);
         setTime = findViewById(R.id.button_choose_time);
         title_small = findViewById(R.id.textView_title_small);
@@ -77,6 +86,7 @@ public class EditNoteActivity extends BaseActivity {
             }
         });
 
+
         if (getIntent().getIntExtra("note_id", -2) > -1) {
             note = DataCenter.getNote(getIntent().getIntExtra("note_id", -2));
             editText_time.setText(DateTimeUtil.timestampToDate(note.getTime()));
@@ -85,7 +95,7 @@ public class EditNoteActivity extends BaseActivity {
             editText_summary.setText(note.getSummary());
             for (int i = 0; i < classifications.size(); i++) {
                 if (note.getClassification().getId() == classifications.get(i).getId()) {
-                    spinner.setSelection(i,true);
+                    spinner.setSelection(i, true);
                     break;
                 }
 
@@ -167,7 +177,7 @@ public class EditNoteActivity extends BaseActivity {
                         note.setNote(editText_content.getText().toString());
                         note.setCost(Float.parseFloat(editText_cost.getText().toString()));
                         note.setClassification(classification);
-                        note.setUser(DataCenter.getNowUser());
+                        note.setUser(user);
                         note.setTime(thisTime);
                         if (editText_summary.getText().toString().trim().length() == 0) {
                             note.setSummary("暂无备注");

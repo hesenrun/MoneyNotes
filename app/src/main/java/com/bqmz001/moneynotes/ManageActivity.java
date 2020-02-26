@@ -119,6 +119,7 @@ public class ManageActivity extends BaseActivity {
                         switch (item.getItemId()) {
                             case R.id.menuitem_setDefault:
                                 DataCenter.setDefaultUser(DataCenter.getUser(p));
+                                forceRefresh();
                                 break;
                             case R.id.menuitem_edit:
                                 intent = new Intent(ManageActivity.this, EditUserActivity.class);
