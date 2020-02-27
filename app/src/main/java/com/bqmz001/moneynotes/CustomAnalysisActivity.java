@@ -198,7 +198,7 @@ public class CustomAnalysisActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar_question, menu);
         return true;
     }
-
+//
     private void init(long startTime, long stopTime) {
         getPieChartData(startTime, stopTime, user);
         getColumnChartData(startTime, stopTime, user);
