@@ -296,8 +296,8 @@ public class AnalysisFragment extends ViewPagerFragment {
                         for (int i = 0; i < days; i++) {
                             DailyNoteFakeCount dailyNoteFakeCount = new DailyNoteFakeCount();
                             dailyNoteFakeCount.setTime(DateTimeUtil.timestampToDate((startTime + ((long)i * 86400000))).substring(5, 10));
-                            dailyNoteFakeCount.setStartTime(startTime + (i * 86400000));
-                            dailyNoteFakeCount.setStopTime(startTime + ((i + 1) * 86400000) - 1);
+                            dailyNoteFakeCount.setStartTime(startTime + ((long)i * 86400000));
+                            dailyNoteFakeCount.setStopTime(startTime + (((long)i + 1) * 86400000) - 1);
                             dnfcs.add(dailyNoteFakeCount);
                         }
 
