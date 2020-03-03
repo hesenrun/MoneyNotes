@@ -333,7 +333,7 @@ public class AnalysisFragment extends ViewPagerFragment {
 
                                 Column column = new Column(values);
                                 column.setHasLabels(true);
-                                column.setHasLabelsOnlyForSelected(true);
+                                column.setHasLabelsOnlyForSelected(false);
                                 columns.add(column);
                             }
 

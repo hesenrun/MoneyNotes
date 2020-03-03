@@ -13,6 +13,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.bqmz001.moneynotes.private_ui.FingerPrintDialog;
+import com.bqmz001.moneynotes.util.EventUtil;
 import com.bqmz001.moneynotes.util.FingerPrintUtil;
 import com.bqmz001.moneynotes.util.ToastUtil;
 
@@ -42,6 +43,7 @@ public class SettingsActivity extends BaseActivity {
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         SwitchPreferenceCompat fingerPrint, zuAnMode;
+        Preference about;
         Cipher cipher;
         FingerPrintDialog dialog;
 
@@ -116,6 +118,16 @@ public class SettingsActivity extends BaseActivity {
                     return true;
                 }
             });
+
+            about=findPreference("ab");
+            about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    EventUtil.postEvent(1,"0","0");
+                    return false;
+                }
+            });
+
 
 
         }
