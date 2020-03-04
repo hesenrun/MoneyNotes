@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.preference.PreferenceManager;
@@ -155,7 +156,7 @@ public class BackgroundService extends Service {
             @Override
             public void accept(EventBean eventBean) throws Exception {
                 if (eventBean != null) {
-                    ToastUtil.showContent(eventBean.getMsgId() + " " + eventBean.getMsg() + " " + eventBean.getParameter());
+               Log.d("BackgroundService",eventBean.getMsgId() + " " + eventBean.getMsg() + " " + eventBean.getParameter());
                     if (eventBean.getMsgId() == 1) {
                         if (eventBean.getParameter().equals("true")) {
                             stopNullNotification();
@@ -198,6 +199,7 @@ public class BackgroundService extends Service {
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Float>>() {
+                    @SuppressLint("WrongConstant")
                     @Override
                     public void accept(List<Float> floats) throws Exception {
                         List<Float> floatList = floats;
