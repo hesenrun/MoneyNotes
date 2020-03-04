@@ -14,6 +14,7 @@ import com.bqmz001.moneynotes.entity.Classification;
 import com.bqmz001.moneynotes.entity.Note;
 import com.bqmz001.moneynotes.entity.User;
 import com.bqmz001.moneynotes.util.DateTimeUtil;
+import com.bqmz001.moneynotes.util.EventUtil;
 import com.bqmz001.moneynotes.util.ToastUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -181,6 +182,7 @@ public class CustomSearchActivity extends AppCompatActivity {
                                                 DataCenter.deleteNote(DataCenter.getNote(p));
                                                 refresh();
                                                 Toast.makeText(CustomSearchActivity.this, "删除完成", Toast.LENGTH_SHORT).show();
+                                                EventUtil.postEvent(0,"update","update");
                                                 dialog.dismiss();
                                             }
                                         })

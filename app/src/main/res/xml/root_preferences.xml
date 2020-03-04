@@ -31,6 +31,10 @@
             app:key="FingerPrint"
             app:title="指纹解锁" />
 
+        <SwitchPreferenceCompat
+            app:key="Notification"
+            app:title="常驻通知栏"/>
+
 
     </PreferenceCategory>
     <PreferenceCategory app:title="关于">

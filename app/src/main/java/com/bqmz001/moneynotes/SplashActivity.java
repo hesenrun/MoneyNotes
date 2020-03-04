@@ -3,6 +3,8 @@ package com.bqmz001.moneynotes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.fingerprint.FingerprintManager;
@@ -13,6 +15,7 @@ import com.bqmz001.moneynotes.private_ui.FingerPrintDialog;
 import com.bqmz001.moneynotes.util.FingerPrintUtil;
 import com.bqmz001.moneynotes.util.ToastUtil;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,11 +25,14 @@ public class SplashActivity extends BaseActivity {
     SharedPreferences pref;
     FingerPrintDialog dialog;
     Cipher cipher;
+    boolean isAppRuning;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
         pref = PreferenceManager.getDefaultSharedPreferences(SplashActivity.this);
         final boolean b = pref.getBoolean("FingerPrint", false);
 
@@ -81,6 +87,7 @@ public class SplashActivity extends BaseActivity {
         };
         timer.schedule(timerTask, 1500);
     }
+
 
     @Override
     protected void onPause() {

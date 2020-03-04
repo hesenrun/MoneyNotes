@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.bqmz001.moneynotes.data.DataCenter;
 import com.bqmz001.moneynotes.entity.Note;
 import com.bqmz001.moneynotes.util.DateTimeUtil;
+import com.bqmz001.moneynotes.util.EventUtil;
 import com.bqmz001.moneynotes.util.ToastUtil;
 
 public class NoteDetailActivity extends BaseActivity {
@@ -93,6 +94,7 @@ public class NoteDetailActivity extends BaseActivity {
                                 DataCenter.deleteNote(note);
                                 finish();
                                 ToastUtil.show(ToastUtil.SUCCESS_DEL);
+                                EventUtil.postEvent(0,"update","update");
                                 dialog.dismiss();
                             }
                         })
