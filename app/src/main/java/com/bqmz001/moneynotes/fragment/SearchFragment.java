@@ -33,6 +33,7 @@ import com.bqmz001.moneynotes.assembly.ViewPagerFragment;
 import com.bqmz001.moneynotes.data.DataCenter;
 import com.bqmz001.moneynotes.entity.Note;
 import com.bqmz001.moneynotes.util.DateTimeUtil;
+import com.bqmz001.moneynotes.util.EventUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +129,7 @@ public class SearchFragment extends ViewPagerFragment {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 DataCenter.deleteNote(DataCenter.getNote(p));
                                                 refresh();
+                                                EventUtil.postEvent(0,"update","update");
                                                 Toast.makeText(getContext(), "删除完成", Toast.LENGTH_SHORT).show();
                                                 dialog.dismiss();
                                             }

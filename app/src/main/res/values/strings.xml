@@ -14,5 +14,7 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_custom_analysis">CustomAnalysisActivity</string>
     <string name="title_activity_custom_search">CustomSearchActivity</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>

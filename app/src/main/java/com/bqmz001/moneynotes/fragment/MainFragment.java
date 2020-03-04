@@ -1,5 +1,6 @@
 package com.bqmz001.moneynotes.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,23 +106,41 @@ public class MainFragment extends ViewPagerFragment {
 
         disposable = Observable.just(new ArrayList<Note>())
                 .subscribeOn(Schedulers.io())
-                .map(new Function<ArrayList<Note>, Float>() {
+                .map(new Function<ArrayList<Note>, List<Float>>() {
                     @Override
-                    public Float apply(ArrayList<Note> notes) throws Exception {
-                        List<Note> noteList1 = DataCenter.getNoteList(user, DateTimeUtil.getNowDayStartTimeStamp(), DateTimeUtil.getNowDayEndTimeStamp());
+                    public List<Float> apply(ArrayList<Note> notes) throws Exception {
+                        List<Float> floatList = new ArrayList<>();
+                        long ts = DateTimeUtil.getNowDayStartTimeStamp();
+                        long te = DateTimeUtil.getNowDayEndTimeStamp();
+                        List<Note> noteList1 = DataCenter.getNoteList(DataCenter.getDefaultUser(), DateTimeUtil.getFirstTimeOfThisMonth(), DateTimeUtil.getLastTimeOfThisMonth());
 
                         Float i = new Float(0);
+                        Float j = new Float(0);
                         for (Note note : noteList1) {
                             i += note.getCost();
+                            if (note.getTime() >= ts && note.getTime() <= te)
+                                j += note.getCost();
                         }
-                        return i;
+                        floatList.add(i);
+                        floatList.add(j);
+                        return floatList;
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Float>() {
+                .subscribe(new Consumer<List<Float>>() {
                     @Override
-                    public void accept(Float aFloat) throws Exception {
-                        todayCost.setText(new BigDecimal(aFloat).setScale(2, RoundingMode.HALF_UP).toString() + "元");
+                    public void accept(List<Float> floats) throws Exception {
+                        List<Float> floatList = floats;
+                        float tc = floatList.get(1);
+                        float mc = floatList.get(0);
+                        int budget = DataCenter.getNowUser().getBudget();
+                        int dr = DateTimeUtil.getLastDayOfMonth(DateTimeUtil.getNowYear(), DateTimeUtil.getNowMonth()) - DateTimeUtil.getNowDay();
+                        todayCost.setText(new BigDecimal(tc).setScale(2, RoundingMode.HALF_UP).toString() + "元");
+                        monthSurp.setText(new BigDecimal((budget - mc)).setScale(2, RoundingMode.HALF_UP).toString() + "元");
+                        dayUseAvg.setText(new BigDecimal((budget - mc) / dr).setScale(2, RoundingMode.HALF_UP).toString() + "元");
+                        daysRemaining.setText(dr + "天");
+                        circleProgress.setProgress(mc / budget);
+                        nowTime.setText("\uD83D\uDCC5当前时间：" + DateTimeUtil.timestampToDate(DateTimeUtil.getNow()));
                         disposable.dispose();
                     }
                 }, new Consumer<Throwable>() {
@@ -130,39 +150,5 @@ public class MainFragment extends ViewPagerFragment {
                     }
                 });
 
-        disposable2 = Observable.just(new ArrayList<Note>())
-                .subscribeOn(Schedulers.io())
-                .map(new Function<ArrayList<Note>, Float>() {
-                    @Override
-                    public Float apply(ArrayList<Note> notes) throws Exception {
-                        List<Note> noteList1 = DataCenter.getNoteList(user, DateTimeUtil.getFirstTimeOfThisMonth(), DateTimeUtil.getLastTimeOfThisMonth());
-
-                        Float i = new Float(0);
-                        for (Note note : noteList1) {
-                            i += note.getCost();
-                        }
-                        return i;
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Float>() {
-                    @Override
-                    public void accept(Float aFloat) throws Exception {
-                        float f = aFloat;
-                        int budget = DataCenter.getNowUser().getBudget();
-                        int dr = DateTimeUtil.getLastDayOfMonth(DateTimeUtil.getNowYear(), DateTimeUtil.getNowMonth()) - DateTimeUtil.getNowDay();
-                        monthSurp.setText(new BigDecimal((budget - f)).setScale(2, RoundingMode.HALF_UP).toString() + "元");
-                        dayUseAvg.setText(new BigDecimal((budget - f) / dr).setScale(2, RoundingMode.HALF_UP).toString() + "元");
-                        daysRemaining.setText(dr + "天");
-                        circleProgress.setProgress(f / budget);
-                        nowTime.setText("\uD83D\uDCC5当前时间：" + DateTimeUtil.timestampToDate(DateTimeUtil.getNow()));
-                        disposable2.dispose();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                    }
-                });
     }
 }

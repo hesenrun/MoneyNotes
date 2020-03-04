@@ -25,6 +25,7 @@ import com.bqmz001.moneynotes.entity.Note;
 import com.bqmz001.moneynotes.entity.User;
 import com.bqmz001.moneynotes.private_ui.DateTimeDialog;
 import com.bqmz001.moneynotes.util.DateTimeUtil;
+import com.bqmz001.moneynotes.util.EventUtil;
 import com.bqmz001.moneynotes.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class EditNoteActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
-        if (getIntent().getStringExtra("from").equals("widget")) {
+        if (getIntent().getStringExtra("from").equals("widget")||getIntent().getStringExtra("from").equals("notification")) {
             user = DataCenter.getDefaultUser();
         } else if (getIntent().getStringExtra("from").equals("app")) {
             user = DataCenter.getNowUser();
@@ -171,6 +172,9 @@ public class EditNoteActivity extends BaseActivity {
                             note.setSummary(editText_summary.getText().toString());
                         }
                         DataCenter.saveNote(note);
+                        if (user.isDefault()==true){
+                            EventUtil.postEvent(0,"update","update");
+                        }
                         finish();
                     } else {
                         note = new Note();
@@ -185,6 +189,9 @@ public class EditNoteActivity extends BaseActivity {
                             note.setSummary(editText_summary.getText().toString());
                         }
                         DataCenter.saveNote(note);
+                        if (user.isDefault()==true){
+                            EventUtil.postEvent(0,"update","update");
+                        }
                         finish();
 
                     }

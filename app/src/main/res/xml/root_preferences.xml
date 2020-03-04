@@ -31,11 +31,17 @@
             app:key="FingerPrint"
             app:title="指纹解锁" />
 
+        <SwitchPreferenceCompat
+            app:key="Notification"
+            app:title="常驻通知栏"/>
+
 
     </PreferenceCategory>
     <PreferenceCategory app:title="关于">
         <Preference app:title="版本：0.0.1" />
-        <Preference app:title="作者：bqmz001" />
+        <Preference
+            app:key="ab"
+            app:title="作者：bqmz001" />
     </PreferenceCategory>
     <PreferenceCategory app:title="使用到的开源库">
         <Preference

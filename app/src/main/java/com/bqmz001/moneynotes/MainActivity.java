@@ -1,5 +1,6 @@
 package com.bqmz001.moneynotes;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.bqmz001.moneynotes.fragment.AnalysisFragment;
 import com.bqmz001.moneynotes.fragment.MainFragment;
 import com.bqmz001.moneynotes.fragment.SearchFragment;
 import com.bqmz001.moneynotes.fragment.SettingFragment;
+import com.bqmz001.moneynotes.service.BackgroundService;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startService(new Intent(MainActivity.this, BackgroundService.class));
         Toolbar toolbar=findViewById(R.id.toolbar);
         toolbar.setTitle("记账本");
         setSupportActionBar(toolbar);
