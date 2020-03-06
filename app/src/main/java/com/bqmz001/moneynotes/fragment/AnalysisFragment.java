@@ -210,7 +210,6 @@ public class AnalysisFragment extends ViewPagerFragment {
     }
 
 
-
     private void init(long startTime, long stopTime) {
         getPieChartData(startTime, stopTime, user);
         getColumnChartData(startTime, stopTime, user);
@@ -295,9 +294,9 @@ public class AnalysisFragment extends ViewPagerFragment {
                         int days = (int) ((stopTime + 1 - startTime) / 86400000);
                         for (int i = 0; i < days; i++) {
                             DailyNoteFakeCount dailyNoteFakeCount = new DailyNoteFakeCount();
-                            dailyNoteFakeCount.setTime(DateTimeUtil.timestampToDate((startTime + ((long)i * 86400000))).substring(5, 10));
-                            dailyNoteFakeCount.setStartTime(startTime + ((long)i * 86400000));
-                            dailyNoteFakeCount.setStopTime(startTime + (((long)i + 1) * 86400000) - 1);
+                            dailyNoteFakeCount.setTime(DateTimeUtil.timestampToDate((startTime + ((long) i * 86400000))).substring(5, 10));
+                            dailyNoteFakeCount.setStartTime(startTime + ((long) i * 86400000));
+                            dailyNoteFakeCount.setStopTime(startTime + (((long) i + 1) * 86400000) - 1);
                             dnfcs.add(dailyNoteFakeCount);
                         }
 
@@ -316,7 +315,17 @@ public class AnalysisFragment extends ViewPagerFragment {
                 .subscribe(new Consumer<List<DailyNoteFakeCount>>() {
                     @Override
                     public void accept(List<DailyNoteFakeCount> dailyNoteFakeCounts) throws Exception {
-                        List<DailyNoteFakeCount> d = dailyNoteFakeCounts;
+                        List<DailyNoteFakeCount> d = new ArrayList<>();
+                        if (type == 3) {
+                            for (DailyNoteFakeCount dnf : dailyNoteFakeCounts) {
+                                if (dnf.getCount() > 0) {
+                                    d.add(dnf);
+                                }
+                            }
+                        } else {
+                            d = dailyNoteFakeCounts;
+
+                        }
                         int numSubcolumns = 1;
                         int numColumns = d.size();
                         if (numColumns > 0) {

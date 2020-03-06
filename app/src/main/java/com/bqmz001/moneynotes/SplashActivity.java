@@ -11,6 +11,7 @@ import android.hardware.fingerprint.FingerprintManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.bqmz001.moneynotes.data.DataCenter;
 import com.bqmz001.moneynotes.private_ui.FingerPrintDialog;
 import com.bqmz001.moneynotes.util.FingerPrintUtil;
 import com.bqmz001.moneynotes.util.ToastUtil;
@@ -50,6 +51,7 @@ public class SplashActivity extends BaseActivity {
                                 @Override
                                 public void success(FingerprintManager.AuthenticationResult result) {
                                     ToastUtil.show(ToastUtil.SUCCESS_AUTH);
+                                    DataCenter.reloadUser();
                                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                                     finish();
                                 }
@@ -78,6 +80,7 @@ public class SplashActivity extends BaseActivity {
                             });
                             dialog.show();
                         } else {
+                            DataCenter.reloadUser();
                             startActivity(new Intent(SplashActivity.this, MainActivity.class));
                             finish();
                         }

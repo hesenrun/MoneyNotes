@@ -35,6 +35,8 @@ import com.bqmz001.moneynotes.entity.Note;
 import com.bqmz001.moneynotes.util.DateTimeUtil;
 import com.bqmz001.moneynotes.util.EventUtil;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -338,10 +340,10 @@ public class SearchFragment extends ViewPagerFragment {
                         if (f > 0 || noteList.size() > 0) {
                             recyclerView.setVisibility(View.VISIBLE);
                             relativeLayout.setVisibility(View.GONE);
-                            textView.setText("支出：" + f + "元");
+                            textView.setText("支出：" + new BigDecimal(f).setScale(2, RoundingMode.HALF_UP).toString() + "元");
                             swipeRefreshLayout.setRefreshing(false);
                         } else {
-                            textView.setText("支出：" + f + "元");
+                            textView.setText("支出：" + new BigDecimal(f).setScale(2, RoundingMode.HALF_UP).toString() + "元");
                             recyclerView.setVisibility(View.GONE);
                             relativeLayout.setVisibility(View.VISIBLE);
                         }

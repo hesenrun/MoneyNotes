@@ -41,9 +41,7 @@ public class MainFragment extends ViewPagerFragment {
     SwipeRefreshLayout refreshLayout;
     FloatingActionButton fab_add;
     TextView todayCost, monthSurp, dayUseAvg, daysRemaining, nowTime;
-
-
-    Disposable disposable, disposable2;
+    Disposable disposable;
 
     @Nullable
     @Override
@@ -112,7 +110,7 @@ public class MainFragment extends ViewPagerFragment {
                         List<Float> floatList = new ArrayList<>();
                         long ts = DateTimeUtil.getNowDayStartTimeStamp();
                         long te = DateTimeUtil.getNowDayEndTimeStamp();
-                        List<Note> noteList1 = DataCenter.getNoteList(DataCenter.getDefaultUser(), DateTimeUtil.getFirstTimeOfThisMonth(), DateTimeUtil.getLastTimeOfThisMonth());
+                        List<Note> noteList1 = DataCenter.getNoteList(user, DateTimeUtil.getFirstTimeOfThisMonth(), DateTimeUtil.getLastTimeOfThisMonth());
 
                         Float i = new Float(0);
                         Float j = new Float(0);
@@ -133,7 +131,7 @@ public class MainFragment extends ViewPagerFragment {
                         List<Float> floatList = floats;
                         float tc = floatList.get(1);
                         float mc = floatList.get(0);
-                        int budget = DataCenter.getNowUser().getBudget();
+                        int budget = user.getBudget();
                         int dr = DateTimeUtil.getLastDayOfMonth(DateTimeUtil.getNowYear(), DateTimeUtil.getNowMonth()) - DateTimeUtil.getNowDay();
                         todayCost.setText(new BigDecimal(tc).setScale(2, RoundingMode.HALF_UP).toString() + "元");
                         monthSurp.setText(new BigDecimal((budget - mc)).setScale(2, RoundingMode.HALF_UP).toString() + "元");

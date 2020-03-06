@@ -80,6 +80,7 @@ public class NoteDetailActivity extends BaseActivity {
             case R.id.edit:
                 Intent intent = new Intent(NoteDetailActivity.this, EditNoteActivity.class);
                 intent.putExtra("note_id", note_id);
+                intent.putExtra("from","app");
                 startActivity(intent);
                 finish();
                 break;

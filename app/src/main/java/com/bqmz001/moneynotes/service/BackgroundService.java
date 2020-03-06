@@ -1,6 +1,7 @@
 package com.bqmz001.moneynotes.service;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -46,8 +47,13 @@ public class BackgroundService extends Service {
     NotificationManager manager2;
 
     Disposable disposable;
+
     private String notificationId = "com.bqmz001.moneynotes";
     private String notificationName = "moneynotes.BackgroundService";
+
+    AlarmManager alarmManager;
+    Intent intent_;
+    PendingIntent pdi;
 
     public BackgroundService() {
     }
@@ -55,6 +61,7 @@ public class BackgroundService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        startupAlarm();
         if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("Notification", false)) {
             startNotification();
         } else {
@@ -62,6 +69,41 @@ public class BackgroundService extends Service {
         }
         receiveEvent();
 
+    }
+
+    @SuppressLint("WrongConstant")
+    private void startupAlarm() {
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        intent_ = new Intent("com.bqmz001.moneynotes.EXT_RECV");
+        intent_.setClass(getApplicationContext(), ExtendReceiver.class);
+        intent_.addFlags(0x01000000);
+        intent_.putExtra("type", "update");
+        pdi = PendingIntent.getBroadcast(getApplicationContext(), 999, intent_, 0);
+        long t = DateTimeUtil.getFirstTimeOfDay(DateTimeUtil.getNowYear(), DateTimeUtil.getNowMonth(), DateTimeUtil.getNowDay() + 1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, t, pdi);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, t, pdi);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, t, pdi);
+        }
+
+    }
+
+    public void refreshAlarm() {
+        long t = DateTimeUtil.getFirstTimeOfDay(DateTimeUtil.getNowYear(), DateTimeUtil.getNowMonth(), DateTimeUtil.getNowDay() + 1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, t, pdi);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, t, pdi);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, t, pdi);
+        }
+    }
+
+    private void cancelAlarm() {
+        if (alarmManager != null && intent_ != null && pdi != null)
+            alarmManager.cancel(pdi);
     }
 
     @Override
@@ -72,6 +114,7 @@ public class BackgroundService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        cancelAlarm();
 
     }
 
@@ -93,9 +136,10 @@ public class BackgroundService extends Service {
         manager2.notify(0, builder.build());
         updateData();
     }
-    private void stopNullNotification(){
+
+    private void stopNullNotification() {
         manager2.cancel(0);
-        manager2=null;
+        manager2 = null;
     }
 
 
@@ -156,7 +200,7 @@ public class BackgroundService extends Service {
             @Override
             public void accept(EventBean eventBean) throws Exception {
                 if (eventBean != null) {
-               Log.d("BackgroundService",eventBean.getMsgId() + " " + eventBean.getMsg() + " " + eventBean.getParameter());
+                    Log.d("BackgroundService", eventBean.getMsgId() + " " + eventBean.getMsg() + " " + eventBean.getParameter());
                     if (eventBean.getMsgId() == 1) {
                         if (eventBean.getParameter().equals("true")) {
                             stopNullNotification();
@@ -169,6 +213,10 @@ public class BackgroundService extends Service {
                     }
                     if (eventBean.getMsgId() == 0)
                         updateData();
+
+                    if (eventBean.getMsgId() == 2) {
+                        refreshAlarm();
+                    }
                 }
             }
         });

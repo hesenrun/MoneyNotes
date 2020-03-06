@@ -21,7 +21,14 @@ public class DataCenter {
     private static User defaultUser;
     private static User nowUser;
 
-    //刷新用户
+    //重新加载用户
+    public static void reloadUser(){
+        defaultUser=null;
+        nowUser=null;
+        getDefaultUser();
+    }
+
+  //刷新用户
     public static void refreshUser() {
         if (defaultUser != null)
             defaultUser = getUser(defaultUser.getId());

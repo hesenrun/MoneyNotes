@@ -1,7 +1,15 @@
 package com.bqmz001.moneynotes;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.hardware.fingerprint.FingerprintManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -43,13 +51,15 @@ public class SettingsActivity extends BaseActivity {
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         SwitchPreferenceCompat fingerPrint, zuAnMode,noti;
-        Preference about;
+        Preference about,bty;
         Cipher cipher;
         FingerPrintDialog dialog;
+        PowerManager pm;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+            pm=(PowerManager)getContext().getSystemService(Context.POWER_SERVICE);
             fingerPrint = findPreference("FingerPrint");
             fingerPrint.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -123,7 +133,7 @@ public class SettingsActivity extends BaseActivity {
             about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-//                    EventUtil.postEvent(1,"0","0");
+
                     return false;
                 }
             });
@@ -134,7 +144,52 @@ public class SettingsActivity extends BaseActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     EventUtil.postEvent(1,"notification",((boolean)newValue)+"");
-                    return true;
+                    noti.setChecked((boolean)newValue);
+                    if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M&&noti.isChecked()&&pm.isIgnoringBatteryOptimizations(getContext().getPackageName())==false){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                                .setTitle("电池优化")
+                                .setMessage("在Android6.0及以上，需要将应用加入电池优化白名单，才能保证通知栏数据的实时性和准确性。\n要将应用加入电池优化白名单吗？\n如果没能添加，可以随时在设置中设置。")
+                                .setNegativeButton("朕已阅", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setPositiveButton("朕去看看", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (pm.isIgnoringBatteryOptimizations(getContext().getPackageName())==false){
+                                            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                                            intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+                                            startActivity(intent);
+
+                                        }
+                                        dialog.dismiss();
+
+                                    }
+                                });
+                        builder.create().show();
+                    }
+                    return false;
+                }
+            });
+
+            bty=findPreference("IngoreBatteryOptimizations");
+            bty.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                      if (pm.isIgnoringBatteryOptimizations(getContext().getPackageName())==false){
+                          Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                          intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+                          startActivity(intent);
+                      }else {
+                          ToastUtil.showContent("已经在白名单了......");
+                      }
+                    }else {
+                        ToastUtil.showContent("这个系统版本应该用不着......");
+                    }
+                    return false;
                 }
             });
 

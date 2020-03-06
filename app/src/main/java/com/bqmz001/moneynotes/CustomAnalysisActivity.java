@@ -283,9 +283,9 @@ public class CustomAnalysisActivity extends AppCompatActivity {
                         int days = (int) ((stopTime + 1 - startTime) / 86400000);
                         for (int i = 0; i < days; i++) {
                             DailyNoteFakeCount dailyNoteFakeCount = new DailyNoteFakeCount();
-                            dailyNoteFakeCount.setTime(DateTimeUtil.timestampToDate((startTime + ((long)i * 86400000))).substring(5, 10));
-                            dailyNoteFakeCount.setStartTime(startTime + ((long)i * 86400000));
-                            dailyNoteFakeCount.setStopTime(startTime + (((long)i + 1) * 86400000) - 1);
+                            dailyNoteFakeCount.setTime(DateTimeUtil.timestampToDate((startTime + ((long) i * 86400000))).substring(5, 10));
+                            dailyNoteFakeCount.setStartTime(startTime + ((long) i * 86400000));
+                            dailyNoteFakeCount.setStopTime(startTime + (((long) i + 1) * 86400000) - 1);
                             dnfcs.add(dailyNoteFakeCount);
                         }
 
@@ -304,7 +304,13 @@ public class CustomAnalysisActivity extends AppCompatActivity {
                 .subscribe(new Consumer<List<DailyNoteFakeCount>>() {
                     @Override
                     public void accept(List<DailyNoteFakeCount> dailyNoteFakeCounts) throws Exception {
-                        List<DailyNoteFakeCount> d = dailyNoteFakeCounts;
+                        List<DailyNoteFakeCount> d = new ArrayList<>();
+                        for (DailyNoteFakeCount dnf : dailyNoteFakeCounts) {
+                            if (dnf.getCount() > 0) {
+                                d.add(dnf);
+                            }
+                        }
+
                         int numSubcolumns = 1;
                         int numColumns = d.size();
                         if (numColumns > 0) {

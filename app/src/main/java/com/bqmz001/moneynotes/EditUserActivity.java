@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.bqmz001.moneynotes.data.DataCenter;
 import com.bqmz001.moneynotes.entity.User;
 import com.bqmz001.moneynotes.private_ui.ColorDialog;
+import com.bqmz001.moneynotes.util.EventUtil;
 import com.bqmz001.moneynotes.util.ToastUtil;
 
 public class EditUserActivity extends BaseActivity {
@@ -111,8 +112,12 @@ public class EditUserActivity extends BaseActivity {
             user.setColor(thiscolor);
             DataCenter.saveUser(user);
             DataCenter.newUserCreateClassification(user);
-
         }
+        if (user.isDefault() == true) {
+            DataCenter.reloadUser();
+            EventUtil.postEvent(0, "update", "update");
+        }
+
     }
 
     private boolean check() {

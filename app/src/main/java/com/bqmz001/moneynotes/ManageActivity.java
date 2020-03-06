@@ -12,6 +12,7 @@ import com.bqmz001.moneynotes.adapter.UserAdapter;
 import com.bqmz001.moneynotes.data.DataCenter;
 import com.bqmz001.moneynotes.entity.Classification;
 import com.bqmz001.moneynotes.entity.User;
+import com.bqmz001.moneynotes.util.EventUtil;
 import com.bqmz001.moneynotes.util.ToastUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -120,6 +121,8 @@ public class ManageActivity extends BaseActivity {
                             case R.id.menuitem_setDefault:
                                 DataCenter.setDefaultUser(DataCenter.getUser(p));
                                 forceRefresh();
+                                DataCenter.reloadUser();
+                                EventUtil.postEvent(0,"update","update");
                                 break;
                             case R.id.menuitem_edit:
                                 intent = new Intent(ManageActivity.this, EditUserActivity.class);

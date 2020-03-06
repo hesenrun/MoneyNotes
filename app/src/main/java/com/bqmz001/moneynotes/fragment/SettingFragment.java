@@ -25,6 +25,7 @@ import com.bqmz001.moneynotes.SettingsActivity;
 import com.bqmz001.moneynotes.assembly.ViewPagerFragment;
 import com.bqmz001.moneynotes.data.DataCenter;
 import com.bqmz001.moneynotes.entity.User;
+import com.bqmz001.moneynotes.util.EventUtil;
 
 public class SettingFragment extends ViewPagerFragment implements View.OnClickListener {
     TextView textView_name, textView_budget;
@@ -131,7 +132,7 @@ public class SettingFragment extends ViewPagerFragment implements View.OnClickLi
                                 user.setBudget(Integer.parseInt(editText.getText().toString()));
                                 DataCenter.saveUser(user);
                                 setUser(DataCenter.getNowUser());
-
+                                EventUtil.postEvent(0,"update","update");
 
                             }
                     }

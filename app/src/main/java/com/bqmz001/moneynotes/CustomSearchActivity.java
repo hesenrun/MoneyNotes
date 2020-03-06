@@ -38,6 +38,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -180,10 +182,14 @@ public class CustomSearchActivity extends AppCompatActivity {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 DataCenter.deleteNote(DataCenter.getNote(p));
-                                                refresh();
+                                                progressDialog.show();
                                                 Toast.makeText(CustomSearchActivity.this, "删除完成", Toast.LENGTH_SHORT).show();
                                                 EventUtil.postEvent(0,"update","update");
+                                                if(check()){
+                                                    getNote(iStartTime, iEndTime, user, classification);
+                                                }
                                                 dialog.dismiss();
+                                                progressDialog.dismiss();
                                             }
                                         })
                                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -280,11 +286,6 @@ public class CustomSearchActivity extends AppCompatActivity {
             }
         }
         return false;
-
-    }
-
-    private void refresh() {
-        progressDialog.show();
     }
 
     private void refreshView(List<Note> _noteList) {
@@ -354,10 +355,10 @@ public class CustomSearchActivity extends AppCompatActivity {
                         if (f > 0 || noteList.size() > 0) {
                             recyclerView.setVisibility(View.VISIBLE);
                             relativeLayout.setVisibility(View.GONE);
-                            textView.setText("支出：" + f + "元");
+                            textView.setText("支出：" + new BigDecimal(f).setScale(2, RoundingMode.HALF_UP).toString() + "元");
 
                         } else {
-                            textView.setText("支出：" + f + "元");
+                            textView.setText("支出：" + new BigDecimal(f).setScale(2, RoundingMode.HALF_UP).toString() + "元");
                             recyclerView.setVisibility(View.GONE);
                             relativeLayout.setVisibility(View.VISIBLE);
                         }
