@@ -166,11 +166,13 @@ public class CustomSearchActivity extends AppCompatActivity {
                             case R.id.viewthis:
                                 intent = new Intent(CustomSearchActivity.this, NoteDetailActivity.class);
                                 intent.putExtra("note_id", p);
+
                                 startActivity(intent);
                                 break;
                             case R.id.edit:
                                 intent = new Intent(CustomSearchActivity.this, EditNoteActivity.class);
                                 intent.putExtra("note_id", p);
+                                intent.putExtra("from","app");
                                 startActivityForResult(intent, 1);
                                 break;
                             case R.id.delete:

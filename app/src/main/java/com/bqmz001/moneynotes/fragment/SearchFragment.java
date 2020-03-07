@@ -119,6 +119,7 @@ public class SearchFragment extends ViewPagerFragment {
                             case R.id.edit:
                                 intent = new Intent(getContext(), EditNoteActivity.class);
                                 intent.putExtra("note_id", p);
+                                intent.putExtra("from","app");
                                 startActivityForResult(intent, 1);
                                 break;
                             case R.id.delete:

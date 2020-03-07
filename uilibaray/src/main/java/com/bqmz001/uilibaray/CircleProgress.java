@@ -101,16 +101,19 @@ public class CircleProgress extends View {
         paint.setShadowLayer(0, 0, 0, 0);
         paint.setColor(circle_background_color);
         canvas.drawCircle(side_width * 0.5f, side_width * 0.5f, side_width * 0.3f, paint);
-        if (progress > 1) {
+        if (progress >= 1) {
             paint.setColor(circle_foreground_color);
             canvas.drawArc(side_width * 0.2f, side_width * 0.2f, side_width * 0.8f, side_width * 0.8f, 0, 360, false, paint);
             for (int i = 0; i < 60; i++) {
                 paint.setColor(getGradient(i / 60f, Color.parseColor("#08000000"), Color.parseColor("#00000000")));
-                canvas.drawArc(side_width * 0.2f, side_width * 0.2f, side_width * 0.8f, side_width * 0.8f, -90 + (360f * (progress % 1f))+i, 1, false, paint);
+                canvas.drawArc(side_width * 0.2f, side_width * 0.2f, side_width * 0.8f, side_width * 0.8f, -90 + (360f * (progress % 1f)) + i, 1, false, paint);
             }
+            paint.setColor(circle_foreground_color);
+            canvas.drawArc(side_width * 0.2f, side_width * 0.2f, side_width * 0.8f, side_width * 0.8f, -90+360 * (progress % 1f)-10, 10, false, paint);
+        } else {
+            paint.setColor(circle_foreground_color);
+            canvas.drawArc(side_width * 0.2f, side_width * 0.2f, side_width * 0.8f, side_width * 0.8f, -90, 360 * (progress % 1f), false, paint);
         }
-        paint.setColor(circle_foreground_color);
-        canvas.drawArc(side_width * 0.2f, side_width * 0.2f, side_width * 0.8f, side_width * 0.8f, -90, 360 * (progress % 1f), false, paint);
 
 
         paint.setColor(circle_foreground_color);

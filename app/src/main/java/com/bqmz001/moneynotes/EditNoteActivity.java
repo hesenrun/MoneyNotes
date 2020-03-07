@@ -57,7 +57,6 @@ public class EditNoteActivity extends BaseActivity {
             user = DataCenter.getDefaultUser();
         } else if (getIntent().getStringExtra("from").equals("app")) {
             user = DataCenter.getNowUser();
-
         }
 
         classifications = DataCenter.getClassificationList(user);

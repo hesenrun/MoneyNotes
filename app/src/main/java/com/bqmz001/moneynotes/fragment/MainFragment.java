@@ -1,11 +1,15 @@
 package com.bqmz001.moneynotes.fragment;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -67,7 +71,7 @@ public class MainFragment extends ViewPagerFragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), EditNoteActivity.class);
                 intent.putExtra("note_id", -1);
-                intent.putExtra("from","app");
+                intent.putExtra("from", "app");
                 startActivity(intent);
             }
         });
@@ -137,7 +141,12 @@ public class MainFragment extends ViewPagerFragment {
                         monthSurp.setText(new BigDecimal((budget - mc)).setScale(2, RoundingMode.HALF_UP).toString() + "元");
                         dayUseAvg.setText(new BigDecimal((budget - mc) / dr).setScale(2, RoundingMode.HALF_UP).toString() + "元");
                         daysRemaining.setText(dr + "天");
-                        circleProgress.setProgress(mc / budget);
+
+                        ObjectAnimator ob = ObjectAnimator.ofFloat(circleProgress, "progress", 0, mc / budget);
+                        ob.setInterpolator(new AnticipateOvershootInterpolator());
+                        ob.setDuration(1500);
+                        ob.start();
+//                        circleProgress.setProgress(mc / budget);
                         nowTime.setText("\uD83D\uDCC5当前时间：" + DateTimeUtil.timestampToDate(DateTimeUtil.getNow()));
                         disposable.dispose();
                     }
