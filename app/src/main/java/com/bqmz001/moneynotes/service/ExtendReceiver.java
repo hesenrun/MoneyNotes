@@ -12,7 +12,6 @@ public class ExtendReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        ToastUtil.showContent("yes");
         EventUtil.postEvent(0, "update", "update");
         EventUtil.postEvent(2, "updateAlarm", "updateAlarm");
     }

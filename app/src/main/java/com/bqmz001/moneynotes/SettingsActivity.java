@@ -148,7 +148,7 @@ public class SettingsActivity extends BaseActivity {
                     if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M&&noti.isChecked()&&pm.isIgnoringBatteryOptimizations(getContext().getPackageName())==false){
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                                 .setTitle("电池优化")
-                                .setMessage("在Android6.0及以上，需要将应用加入电池优化白名单，才能保证通知栏数据的实时性和准确性。\n要将应用加入电池优化白名单吗？\n如果没能添加，可以随时在设置中设置。")
+                                .setMessage("在Android6.0及以上，需要将应用加入电池优化白名单，才能保证通知栏数据的实时性和准确性。\n\n要将应用加入电池优化白名单吗？\n\n如果没能添加，可以随时在设置中设置。")
                                 .setNegativeButton("朕已阅", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

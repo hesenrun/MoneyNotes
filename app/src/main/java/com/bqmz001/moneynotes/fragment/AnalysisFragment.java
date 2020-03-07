@@ -67,6 +67,7 @@ public class AnalysisFragment extends ViewPagerFragment {
     User user;
 
 
+
     int type = 1;
 
     @Nullable
@@ -367,6 +368,9 @@ public class AnalysisFragment extends ViewPagerFragment {
                             columnChartView.setVisibility(View.GONE);
                         }
                         swipeRefreshLayout.setRefreshing(false);
+                        if (scrollView.getVisibility()==View.VISIBLE){
+                            scrollView.smoothScrollTo(0,0);
+                        }
                         disposable2.dispose();
                     }
                 }, new Consumer<Throwable>() {

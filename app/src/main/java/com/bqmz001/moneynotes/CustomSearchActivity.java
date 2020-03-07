@@ -362,6 +362,9 @@ public class CustomSearchActivity extends AppCompatActivity {
                             recyclerView.setVisibility(View.GONE);
                             relativeLayout.setVisibility(View.VISIBLE);
                         }
+                        if (noteList.size()>0&&recyclerView.getVisibility()==View.VISIBLE){
+                            recyclerView.scrollToPosition(0);
+                        }
                         disposable2.dispose();
                     }
                 }, new Consumer<Throwable>() {

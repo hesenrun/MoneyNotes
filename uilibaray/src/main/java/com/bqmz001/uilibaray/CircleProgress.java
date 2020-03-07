@@ -1,11 +1,15 @@
 package com.bqmz001.uilibaray;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Shader;
+import android.graphics.SweepGradient;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
@@ -63,7 +67,7 @@ public class CircleProgress extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int w = MeasureSpec.getSize(widthMeasureSpec);
         int h = MeasureSpec.getSize(heightMeasureSpec);
-        int hMode=MeasureSpec.getMode(heightMeasureSpec);
+        int hMode = MeasureSpec.getMode(heightMeasureSpec);
 
 
         if (w > h) {
@@ -73,7 +77,7 @@ public class CircleProgress extends View {
             side_width = w;
             setMeasuredDimension(w, w);
         }
-        if (hMode==MeasureSpec.UNSPECIFIED&&h==0){
+        if (hMode == MeasureSpec.UNSPECIFIED && h == 0) {
             side_width = w;
             setMeasuredDimension(w, w);
         }
@@ -81,6 +85,8 @@ public class CircleProgress extends View {
 
     }
 
+    @SuppressLint("DrawAllocation")
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -95,11 +101,19 @@ public class CircleProgress extends View {
         paint.setShadowLayer(0, 0, 0, 0);
         paint.setColor(circle_background_color);
         canvas.drawCircle(side_width * 0.5f, side_width * 0.5f, side_width * 0.3f, paint);
-        paint.setColor(circle_foreground_color);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            canvas.drawArc(side_width * 0.2f, side_width * 0.2f, side_width * 0.8f, side_width * 0.8f, -90, 360 * progress, false, paint);
+        if (progress > 1) {
+            paint.setColor(circle_foreground_color);
+            canvas.drawArc(side_width * 0.2f, side_width * 0.2f, side_width * 0.8f, side_width * 0.8f, 0, 360, false, paint);
+            for (int i = 0; i < 60; i++) {
+                paint.setColor(getGradient(i / 60f, Color.parseColor("#08000000"), Color.parseColor("#00000000")));
+                canvas.drawArc(side_width * 0.2f, side_width * 0.2f, side_width * 0.8f, side_width * 0.8f, -90 + (360f * (progress % 1f))+i, 1, false, paint);
+            }
         }
+        paint.setColor(circle_foreground_color);
+        canvas.drawArc(side_width * 0.2f, side_width * 0.2f, side_width * 0.8f, side_width * 0.8f, -90, 360 * (progress % 1f), false, paint);
 
+
+        paint.setColor(circle_foreground_color);
         rect = new Rect();
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(font_color);
@@ -114,4 +128,26 @@ public class CircleProgress extends View {
         canvas.drawText(text, side_width / 2 - rect.width() / 2, baseline, paint);
 
     }
+
+    public int getGradient(float fraction, int startColor, int endColor) {
+        if (fraction > 1) fraction = 1;
+        int alphaStart = Color.alpha(startColor);
+        int redStart = Color.red(startColor);
+        int blueStart = Color.blue(startColor);
+        int greenStart = Color.green(startColor);
+        int alphaEnd = Color.alpha(endColor);
+        int redEnd = Color.red(endColor);
+        int blueEnd = Color.blue(endColor);
+        int greenEnd = Color.green(endColor);
+        int alphaDifference = alphaEnd - alphaStart;
+        int redDifference = redEnd - redStart;
+        int blueDifference = blueEnd - blueStart;
+        int greenDifference = greenEnd - greenStart;
+        int alphaCurrent = (int) (alphaStart + fraction * alphaDifference);
+        int redCurrent = (int) (redStart + fraction * redDifference);
+        int blueCurrent = (int) (blueStart + fraction * blueDifference);
+        int greenCurrent = (int) (greenStart + fraction * greenDifference);
+        return Color.argb(alphaCurrent, redCurrent, greenCurrent, blueCurrent);
+    }
+
 }

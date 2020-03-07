@@ -351,6 +351,9 @@ public class CustomAnalysisActivity extends AppCompatActivity {
                             dailycost.setVisibility(View.GONE);
                             columnChartView.setVisibility(View.GONE);
                         }
+                        if (scrollView.getVisibility()==View.VISIBLE){
+                            scrollView.smoothScrollTo(0,0);
+                        }
                         progressDialog.dismiss();
                         disposable2.dispose();
                     }

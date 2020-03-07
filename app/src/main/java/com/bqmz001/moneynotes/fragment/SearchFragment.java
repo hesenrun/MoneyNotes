@@ -348,6 +348,9 @@ public class SearchFragment extends ViewPagerFragment {
                             relativeLayout.setVisibility(View.VISIBLE);
                         }
                         swipeRefreshLayout.setRefreshing(false);
+                        if (noteList.size()>0&&recyclerView.getVisibility()==View.VISIBLE){
+                            recyclerView.scrollToPosition(0);
+                        }
                         disposable2.dispose();
                     }
                 }, new Consumer<Throwable>() {
