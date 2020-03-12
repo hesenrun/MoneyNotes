@@ -24,6 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -113,13 +114,43 @@ public class CustomAnalysisActivity extends AppCompatActivity {
         pieChartView = findViewById(R.id.pieChartView);
         pieChartContent = findViewById(R.id.textView_pieChartContent);
         columnChartView = findViewById(R.id.columnChartView);
+
+        View.OnTouchListener touchListener = new View.OnTouchListener() {
+            float x0 = 0f;
+            float y0 = 0f;
+            float ratio=2.5f;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        x0 = event.getX();
+                        y0 = event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float dx = Math.abs(event.getX() - x0);
+                        float dy = Math.abs(event.getY() - y0);
+                        x0 = event.getX();
+                        y0 = event.getY();
+                        //防ScrollView
+                        scrollView.requestDisallowInterceptTouchEvent(dx*ratio>dy);
+                        //防swipeRefreshLayout
+                        scrollView.getParent().requestDisallowInterceptTouchEvent(true);
+                        //防CoordinatorLayout
+                        scrollView.getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+                }
+                return false;
+            }
+        };
+        columnChartView.setOnTouchListener(touchListener);
+        pieChartView.setOnTouchListener(touchListener);
+
         dailycost = findViewById(R.id.textView_dailyCost);
         relativeLayout = findViewById(R.id.relativeLayout);
         scrollView = findViewById(R.id.scrollView);
         button = findViewById(R.id.button_ok);
 
         user = DataCenter.getNowUser();
-
         scrollView.setVisibility(View.GONE);
         relativeLayout.setVisibility(View.VISIBLE);
 

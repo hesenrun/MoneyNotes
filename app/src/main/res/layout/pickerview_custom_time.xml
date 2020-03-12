@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:layout_margin="10dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/timepicker"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:minHeight="150dp"
+        android:orientation="horizontal">
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/year"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            />
+
+        <com.contrarywind.view.WheelView
+
+            android:id="@+id/month"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+           />
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/day"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+          />
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/hour"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+           />
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/min"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+             />
+
+        <com.contrarywind.view.WheelView
+            android:id="@+id/second"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:text="取消"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/button_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:text="确定"
+            android:textColor="@color/colorAccent" />
+    </LinearLayout>
+</LinearLayout>

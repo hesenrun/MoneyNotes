@@ -84,6 +84,7 @@ public class SearchFragment extends ViewPagerFragment {
         noteList = new ArrayList<>();
         adapter = new FlowAdapter(noteList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         adapter.setClickListener(new FlowAdapter.OnClickListener() {
             @Override
             public void onClick(int position, View v) {

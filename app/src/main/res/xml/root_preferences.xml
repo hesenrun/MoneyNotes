@@ -42,7 +42,7 @@
 
     </PreferenceCategory>
     <PreferenceCategory app:title="关于">
-        <Preference app:title="版本：0.0.1" />
+        <Preference app:title="版本：0.1" />
         <Preference
             app:key="ab"
             app:title="作者：bqmz001" />

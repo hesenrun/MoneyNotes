@@ -51,7 +51,9 @@ public class SplashActivity extends BaseActivity {
                                 @Override
                                 public void success(FingerprintManager.AuthenticationResult result) {
                                     ToastUtil.show(ToastUtil.SUCCESS_AUTH);
-                                    DataCenter.reloadUser();
+                                    if (getSharedPreferences("MainActivity", MODE_PRIVATE).getBoolean("isFirst", true) == false) {
+                                        DataCenter.reloadUser();
+                                    }
                                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                                     finish();
                                 }
@@ -80,7 +82,9 @@ public class SplashActivity extends BaseActivity {
                             });
                             dialog.show();
                         } else {
-                            DataCenter.reloadUser();
+                            if (getSharedPreferences("boot", MODE_PRIVATE).getBoolean("isFirst", true) == false) {
+                                DataCenter.reloadUser();
+                            }
                             startActivity(new Intent(SplashActivity.this, MainActivity.class));
                             finish();
                         }

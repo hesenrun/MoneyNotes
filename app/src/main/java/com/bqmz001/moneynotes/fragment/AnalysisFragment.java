@@ -1,11 +1,14 @@
 package com.bqmz001.moneynotes.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -65,6 +68,8 @@ public class AnalysisFragment extends ViewPagerFragment {
     NestedScrollView scrollView;
     Button button;
     User user;
+    WindowManager windowManager;
+    DisplayMetrics displayMetrics;
 
 
 
@@ -80,6 +85,9 @@ public class AnalysisFragment extends ViewPagerFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        windowManager=(WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
+        displayMetrics=new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
         user = DataCenter.getNowUser();
         button = view.findViewById(R.id.button);
         pieChartView = view.findViewById(R.id.pieChartView);
@@ -91,11 +99,11 @@ public class AnalysisFragment extends ViewPagerFragment {
         relativeLayout = view.findViewById(R.id.relativeLayout);
         radioButton = view.findViewById(R.id.radioButton_today);
         scrollView = view.findViewById(R.id.scrollView);
+        scrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         View.OnTouchListener touchListener = new View.OnTouchListener() {
-            float ratio = 6.5f; //水平和竖直方向滑动的灵敏度,偏大是水平方向灵敏
             float x0 = 0f;
             float y0 = 0f;
-
+            float ratio=2.5f;
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -108,7 +116,14 @@ public class AnalysisFragment extends ViewPagerFragment {
                         float dy = Math.abs(event.getY() - y0);
                         x0 = event.getX();
                         y0 = event.getY();
-                        scrollView.requestDisallowInterceptTouchEvent(true);
+                        //防ScrollView
+                        scrollView.requestDisallowInterceptTouchEvent(dx*ratio>dy);
+                        //防swipeRefreshLayout
+                        scrollView.getParent().requestDisallowInterceptTouchEvent(true);
+                        //防CoordinatorLayout
+                        scrollView.getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                        //防ViewPager
+                        scrollView.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(true);
                         break;
                 }
                 return false;
