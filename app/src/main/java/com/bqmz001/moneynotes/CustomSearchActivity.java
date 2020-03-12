@@ -389,6 +389,7 @@ public class CustomSearchActivity extends AppCompatActivity {
                 .setContentTextSize(18)
                 .setType(new boolean[]{true, true, true, false, false, false})
                 .setDate(new DateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMinuteOfHour(0).toCalendar(Locale.getDefault()))
+                .setRangDate(new DateTime(1900,1,1,0,0,0).toCalendar(Locale.getDefault()),new DateTime().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).toCalendar(Locale.getDefault()))
                 .setLabel("年", "月", "日", "时", "分", "秒")
                 .setLineSpacingMultiplier(2.5f)
                 .setItemVisibleCount(5)
@@ -436,6 +437,7 @@ public class CustomSearchActivity extends AppCompatActivity {
                     }
                 })
                 .setDate(new DateTime().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).toCalendar(Locale.getDefault()))
+                .setRangDate(new DateTime(1900,1,1,0,0,0).toCalendar(Locale.getDefault()),new DateTime().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).toCalendar(Locale.getDefault()))
                 .setContentTextSize(18)
                 .setType(new boolean[]{true, true, true, false, false, false})
                 .setLabel("年", "月", "日", "时", "分", "秒")
