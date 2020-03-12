@@ -1,12 +1,17 @@
 package com.bqmz001.moneynotes;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.CustomListener;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.bqmz001.moneynotes.adapter.FlowAdapter;
 import com.bqmz001.moneynotes.adapter.SpCfMenuAdapter;
 import com.bqmz001.moneynotes.data.DataCenter;
@@ -27,9 +32,11 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,10 +45,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -54,11 +65,11 @@ import io.reactivex.schedulers.Schedulers;
 public class CustomSearchActivity extends AppCompatActivity {
     Toolbar toolbar;
     ActionBar actionBar;
-    EditText startYear, startMonth, startDay, endYear, endMonth, endDay;
-    int iStartYear, iStartMonth, iStartDay, iEndYear, iEndMonth, iEndDay;
+    TimePickerView stp, etp;
+    TextView tv_sp, tv_ep;
     long iStartTime, iEndTime;
     ProgressDialog progressDialog;
-    AlertDialog.Builder builder;
+
     RelativeLayout relativeLayout;
     RecyclerView recyclerView;
     FlowAdapter adapter;
@@ -86,7 +97,7 @@ public class CustomSearchActivity extends AppCompatActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
         }
         user = DataCenter.getNowUser();
-        classifications=new ArrayList<>();
+        classifications = new ArrayList<>();
         Classification c = new Classification();
         c.setId(-2);
         c.setColor(Color.parseColor("#efefef"));
@@ -94,30 +105,34 @@ public class CustomSearchActivity extends AppCompatActivity {
         classifications.add(c);
         classifications.addAll(DataCenter.getClassificationList(user));
 
-        builder = new AlertDialog.Builder(this)
-                .setTitle("为什么会这样？")
-                .setMessage("    因为没有找到合适的滚轮控件，所以变成现在的这个样子。不好意思给大家添麻烦了！\n" +
-                        "    尽管我自己看起来也是非常的不适，但在找到可替代方案之前，目前只能这样子了。\n" +
-                        "    求大佬推荐好的控件！最好是加载不出错速度非常快的那种。")
-                .setNegativeButton("朕已阅", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("正在处理");
         progressDialog.setMessage("请稍后...");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
-        startYear = findViewById(R.id.editText_stratYear);
-        startMonth = findViewById(R.id.editText_startMonth);
-        startDay = findViewById(R.id.editText_startDay);
-        endYear = findViewById(R.id.editText_endYear);
-        endMonth = findViewById(R.id.editText_endMonth);
-        endDay = findViewById(R.id.editText_endDay);
+        tv_sp = findViewById(R.id.textView_startTime);
+        tv_ep = findViewById(R.id.textView_endTime);
+        initStartTimePicker();
+        initEndTimePicker();
+        iStartTime=new DateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).getMillis();
+        iEndTime=new DateTime().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).getMillis();
+        tv_sp.setText(DateTimeUtil.timestampToDate(iStartTime).substring(0, 10));
+        tv_ep.setText(DateTimeUtil.timestampToDate(iEndTime).substring(0, 10));
+
+        tv_sp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stp.show();
+            }
+        });
+        tv_ep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etp.show();
+            }
+        });
         textView = findViewById(R.id.textView);
-        recyclerView=findViewById(R.id.recyclerView_history);
+        recyclerView = findViewById(R.id.recyclerView_history);
         relativeLayout = findViewById(R.id.relativeLayout);
         spinner = findViewById(R.id.spinner);
         button = findViewById(R.id.button_ok);
@@ -172,7 +187,7 @@ public class CustomSearchActivity extends AppCompatActivity {
                             case R.id.edit:
                                 intent = new Intent(CustomSearchActivity.this, EditNoteActivity.class);
                                 intent.putExtra("note_id", p);
-                                intent.putExtra("from","app");
+                                intent.putExtra("from", "app");
                                 startActivityForResult(intent, 1);
                                 break;
                             case R.id.delete:
@@ -186,8 +201,8 @@ public class CustomSearchActivity extends AppCompatActivity {
                                                 DataCenter.deleteNote(DataCenter.getNote(p));
                                                 progressDialog.show();
                                                 Toast.makeText(CustomSearchActivity.this, "删除完成", Toast.LENGTH_SHORT).show();
-                                                EventUtil.postEvent(0,"update","update");
-                                                if(check()){
+                                                EventUtil.postEvent(0, "update", "update");
+                                                if (check()) {
                                                     getNote(iStartTime, iEndTime, user, classification);
                                                 }
                                                 dialog.dismiss();
@@ -231,11 +246,7 @@ public class CustomSearchActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_question, menu);
-        return true;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -243,50 +254,14 @@ public class CustomSearchActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.question:
-                builder.create().show();
-                break;
         }
         return true;
     }
 
 
     boolean check() {
-        //文本框非空检查
-        if (startYear.getText().toString().trim().length() > 0 &&
-                startMonth.getText().toString().trim().length() > 0 &&
-                startDay.getText().toString().trim().length() > 0 &&
-                endYear.getText().toString().trim().length() > 0 &&
-                endMonth.getText().toString().trim().length() > 0 &&
-                endDay.getText().toString().trim().length() > 0
-        ) {
-            iStartYear = Integer.parseInt(startYear.getText().toString().trim());
-            iStartMonth = Integer.parseInt(startMonth.getText().toString().trim());
-            iStartDay = Integer.parseInt(startDay.getText().toString().trim());
-            iEndYear = Integer.parseInt(endYear.getText().toString().trim());
-            iEndMonth = Integer.parseInt(endMonth.getText().toString().trim());
-            iEndDay = Integer.parseInt(endDay.getText().toString().trim());
-            //年份检查
-            if ((iStartYear > 1900 && iStartYear < 2100) && (iEndYear > 1900 && iEndYear < 2100)) {
-                //月份检查
-                if ((iStartMonth > 0 && iStartMonth < 13) && (iEndMonth > 0 && iEndMonth < 13)) {
-                    //日期检查第一步——看看有没有超过31天
-                    if ((iStartDay > 0 && iStartDay < 32) && (iEndDay > 0 && iEndDay < 32)) {
-                        //日期检查第二步——看看有没有超出当月最大
-                        if (iStartDay <= DateTimeUtil.getLastDayOfMonth(iStartYear, iStartMonth) && iEndDay <= DateTimeUtil.getLastDayOfMonth(iEndYear, iEndMonth)) {
-                            long s = DateTimeUtil.getFirstTimeOfDay(iStartYear, iStartMonth, iStartDay);
-                            long e = DateTimeUtil.getLastTimeOfDay(iEndYear, iEndMonth, iEndDay);
-                            //开始日期是否超过结束日期
-                            if (s < e) {
-                                iStartTime = s;
-                                iEndTime = e;
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        if (iStartTime != 0 && iEndTime != 0)
+            return iStartTime < iEndTime;
         return false;
     }
 
@@ -364,7 +339,7 @@ public class CustomSearchActivity extends AppCompatActivity {
                             recyclerView.setVisibility(View.GONE);
                             relativeLayout.setVisibility(View.VISIBLE);
                         }
-                        if (noteList.size()>0&&recyclerView.getVisibility()==View.VISIBLE){
+                        if (noteList.size() > 0 && recyclerView.getVisibility() == View.VISIBLE) {
                             recyclerView.scrollToPosition(0);
                         }
                         disposable2.dispose();
@@ -380,6 +355,105 @@ public class CustomSearchActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    private void initStartTimePicker() {
+        stp = new TimePickerBuilder(this, new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {
+                iStartTime = new DateTime(date).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).getMillis();
+                tv_sp.setText(DateTimeUtil.timestampToDate(iStartTime).substring(0, 10));
+            }
+        })
+                .setLayoutRes(R.layout.pickerview_custom_time, new CustomListener() {
+                    @Override
+                    public void customLayout(View v) {
+                        Button ok = v.findViewById(R.id.button_ok);
+                        Button cancel = v.findViewById(R.id.button_cancel);
+                        ok.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                stp.returnData();
+                                stp.dismiss();
+                            }
+                        });
+                        cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                stp.dismiss();
+                            }
+                        });
+                    }
+                })
+
+                .setContentTextSize(18)
+                .setType(new boolean[]{true, true, true, false, false, false})
+                .setDate(new DateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMinuteOfHour(0).toCalendar(Locale.getDefault()))
+                .setLabel("年", "月", "日", "时", "分", "秒")
+                .setLineSpacingMultiplier(2.5f)
+                .setItemVisibleCount(5)
+                .setTextXOffset(0, 0, 0, 0, 0, 0)
+                .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
+                .setDividerColor(0xFF24AD9D)
+                .isDialog(true)
+                .build();
+        Dialog dialog = stp.getDialog();
+        if (dialog != null) {
+
+            Window dialogWindow = dialog.getWindow();
+            dialogWindow.setGravity(Gravity.CENTER);//改成Bottom,底部显示
+            dialogWindow.setDimAmount(0.3f);
+        }
+
+    }
+
+    private void initEndTimePicker() {
+        etp = new TimePickerBuilder(this, new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {
+                iEndTime = new DateTime(date).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).getMillis();
+                tv_ep.setText(DateTimeUtil.timestampToDate(iEndTime).substring(0, 10));
+            }
+        })
+                .setLayoutRes(R.layout.pickerview_custom_time, new CustomListener() {
+                    @Override
+                    public void customLayout(View v) {
+                        Button ok = v.findViewById(R.id.button_ok);
+                        Button cancel = v.findViewById(R.id.button_cancel);
+                        ok.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                etp.returnData();
+                                etp.dismiss();
+                            }
+                        });
+                        cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                etp.dismiss();
+                            }
+                        });
+                    }
+                })
+                .setDate(new DateTime().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).toCalendar(Locale.getDefault()))
+                .setContentTextSize(18)
+                .setType(new boolean[]{true, true, true, false, false, false})
+                .setLabel("年", "月", "日", "时", "分", "秒")
+                .setLineSpacingMultiplier(2.5f)
+                .setItemVisibleCount(5)
+                .setTextXOffset(0, 0, 0, 0, 0, 0)
+                .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
+                .setDividerColor(0xFF24AD9D)
+                .isDialog(true)
+                .build();
+        Dialog dialog = etp.getDialog();
+        if (dialog != null) {
+
+            Window dialogWindow = dialog.getWindow();
+            dialogWindow.setGravity(Gravity.CENTER);//改成Bottom,底部显示
+            dialogWindow.setDimAmount(0.3f);
+        }
+
     }
 
 }

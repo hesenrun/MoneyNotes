@@ -33,11 +33,11 @@
 
         <SwitchPreferenceCompat
             app:key="Notification"
-            app:title="常驻通知栏"/>
+            app:title="常驻通知栏" />
         <Preference
             app:key="IngoreBatteryOptimizations"
-            app:title="电池优化白名单"
-            app:summary="如果通知感觉更新不及时，可以尝试此选项"/>
+            app:summary="如果通知感觉更新不及时，可以尝试此选项"
+            app:title="电池优化白名单" />
 
 
     </PreferenceCategory>
@@ -63,6 +63,10 @@
         <Preference
             app:summary="https://github.com/lecho/hellocharts-android"
             app:title="hellocharts-android" />
+
+        <Preference
+            app:summary="https://github.com/Bigkoo/Android-PickerView"
+            app:title="Android-PickerView" />
     </PreferenceCategory>
 
 </PreferenceScreen>

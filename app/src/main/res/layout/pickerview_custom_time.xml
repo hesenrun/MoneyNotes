@@ -37,6 +37,9 @@
             android:layout_height="match_parent"
           />
 
+        <View
+            android:layout_width="10dp"
+            android:layout_height="0dp"/>
         <com.contrarywind.view.WheelView
             android:id="@+id/hour"
             android:layout_width="60dp"
@@ -51,9 +54,9 @@
 
         <com.contrarywind.view.WheelView
             android:id="@+id/second"
-            android:layout_width="0dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.1" />
+             />
     </LinearLayout>
 
     <LinearLayout
